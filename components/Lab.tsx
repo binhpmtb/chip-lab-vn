@@ -378,7 +378,12 @@ export default function Lab() {
             <button
               key={id}
               className={view === id ? "nav-item active" : "nav-item"}
-              onClick={() => setView(id)}
+              onClick={() =>
+                id === "exercises" && view !== "exercises"
+                  ? loadExercise(exerciseId)
+                  : setView(id)
+              }
+              disabled={busy}
             >
               <Icon size={18} />
               {label}
