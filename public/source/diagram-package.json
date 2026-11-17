@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "brfs": "2.0.2",
+    "browserify": "17.0.1",
+    "browserify-shim": "3.8.16",
+    "elkjs": "0.12.1",
+    "netlistsvg": "1.0.2"
+  }
+}

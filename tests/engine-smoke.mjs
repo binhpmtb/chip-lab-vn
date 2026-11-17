@@ -9,6 +9,7 @@ for(i=0;i<4;i=i+1) begin {a,b}=i; #5; if(y !== (a&b)) $fatal(1,"AND failed"); en
 $display("ALL_PASS"); $finish; end endmodule`;
 const result = await simulate(andGate, andTb);
 assert.match(result.log, /ALL_PASS/);
+assert.doesNotMatch(result.log, /ERROR:|FATAL:|dynamic linking/i);
 assert.match(result.vcd, /\$enddefinitions/);
 const counter =
   "module dut(input clk,rst,output reg [3:0] q); always @(posedge clk) if(rst) q<=0; else q<=q+1; endmodule";

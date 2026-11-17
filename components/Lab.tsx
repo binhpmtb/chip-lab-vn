@@ -380,7 +380,11 @@ export default function Lab() {
               {progress.length}/{exercises.length}
             </strong>
           </div>
-          <progress aria-label={t("Tiến độ bài tập", "Exercise progress")} value={progress.length} max={exercises.length} />
+          <progress
+            aria-label={t("Tiến độ bài tập", "Exercise progress")}
+            value={progress.length}
+            max={exercises.length}
+          />
           <p>
             {t(
               "Mỗi mạch nhỏ, một bước tiến.",
@@ -597,13 +601,29 @@ export default function Lab() {
                         <Markdown>{lesson.body[lang]}</Markdown>
                       </article>
                       <button
+                        className="secondary-button full"
+                        disabled={busy}
+                        onClick={() => {
+                          const exampleExercise = exercises.find(
+                            (e) => e.id === lesson.exerciseIds[0],
+                          );
+                          if (exampleExercise) {
+                            setDesign(exampleExercise.solution);
+                            setTb(exampleExercise.testbench);
+                            setEditorTab("design");
+                            setVcd("");
+                            setNetlist(null);
+                            setError("");
+                          }
+                        }}
+                      >
+                        {t("Mở ví dụ chạy được", "Load a working example")}
+                      </button>
+                      <button
                         className="primary-button full"
                         disabled={busy}
                         onClick={() =>
-                          loadExercise(
-                            exercises.find((e) => e.module === lesson.module)
-                              ?.id || exercises[0].id,
-                          )
+                          loadExercise(lesson.exerciseIds[0] || exercises[0].id)
                         }
                       >
                         {t("Thực hành chủ đề này", "Practice this topic")}
@@ -1097,6 +1117,9 @@ export default function Lab() {
             </div>
           )}
           <footer>
+            <button className="text-button" onClick={() => setView("credits")}>
+              {t("Nguồn & giấy phép", "Credits & licenses")}
+            </button>
             <span>
               ChipLab · {t("Từ ý tưởng đến vi mạch", "From ideas to circuits")}
             </span>

@@ -11,7 +11,7 @@ const examples = JSON.parse(
 );
 for (const exercise of exercises) {
   const result = await simulate(exercise.solution, exercise.testbench);
-  assert.ok(grade(result.log, exercise.id), exercise.id + ': ' + result.log);
+  assert.ok(grade(result.log, exercise.id), exercise.id + ": " + result.log);
   assert.ok(result.vcd.includes("$enddefinitions"), exercise.id);
   let rejected = false;
   try {

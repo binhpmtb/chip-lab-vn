@@ -59,6 +59,8 @@ These projects inform original lessons and externally reproducible workflows. Th
 
 ## Release implementation checklist
 
+The shipped diagram dependencies are pinned to netlistsvg 1.0.2 and elkjs 0.12.1. netlistsvg is rebuilt from its official npm source with the published lockfile. elkjs 0.12.1 declares EPL-2.0 OR GPL-3.0-or-later. The older ELK bundle supplied by VeriSim had an EPL-1.0 header and was replaced. The replacement combination successfully renders the digital example to SVG. Build instructions and source archives are published under `/source/`, and full collected notices under `/third-party-notices.txt`.
+
 The implemented engine uses `@yowasp/yosys` version `0.66.1164`, whose version output identifies Yosys revision `86f2ddebc`. Its WASM and resource files are self-hosted. Icarus assets come from VeriSim revision `ab0ff386` and the matching Icarus source is `c7530db`. Corresponding source, build patch and instructions are provided under `public/source/`. The example library includes Alex Forencich's MIT-licensed UART transmitter from `verilog-uart` revision `1b867e53af738e4a8bc7c839ca2f1c07f40382dc`, with its notice retained. These records describe the initial implementation and should be updated when assets change.
 
 - Pin dependencies and store the lockfile.

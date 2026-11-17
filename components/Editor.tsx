@@ -20,7 +20,10 @@ export default function Editor({
       value={value}
       height="340px"
       theme={dark ? "dark" : "light"}
-      extensions={[...extensions, EditorView.contentAttributes.of({ 'aria-label': label })]}
+      extensions={[
+        ...extensions,
+        EditorView.contentAttributes.of({ "aria-label": label }),
+      ]}
       onChange={onChange}
       basicSetup={{
         lineNumbers: true,

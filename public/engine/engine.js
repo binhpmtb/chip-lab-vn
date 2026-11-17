@@ -34,6 +34,8 @@ export async function simulate(design, testbench, progress = () => {}) {
   progress('Preprocessing design and testbench…');
   runMain(preprocessor, ['-L', '/design.sv', '/testbench.sv'], diagnostics.read);
   const compiler = await initIvl({print: diagnostics.append, printErr: diagnostics.append});
+  // Register statically linked system tasks in generated VVP without requesting
+  // an unsupported dynamic compiler-side system.vpi load.
   compiler.FS.writeFile('/ivl.conf', 'basedir:/\ngeneration:2012\ngeneration:no-specify\nout:/out.vvp\niwidth:32\nwidthcap:65536\nfunctor:cprop\nfunctor:nodangle\nflag:DLL=vvp.tgt\nflag:VPI_MODULE_LIST=system.vpi\n');
   compiler.FS.writeFile('/source.sv', source.join('\n') + '\n');
   progress('Compiling SystemVerilog…');

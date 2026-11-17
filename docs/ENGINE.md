@@ -20,3 +20,5 @@ The modules lazy-load only when an action is requested. The self-hosted files su
 Run `node tests/engine-smoke.mjs` from the project directory. It checks all four AND input combinations, a clocked counter's reset and increment, Yosys producing one AND cell, and rejection of invalid Verilog. Emscripten updates Node's exit code on a deliberately failing invocation, so the test restores it after verifying expected rejection. Production uses Worker errors and termination instead.
 
 `lib/vcd.ts` parses VCD hierarchy, aliases, timescale, scalar and vector transitions, including unknown `x` and high-impedance `z`. Real-valued signals are omitted from the digital waveform view.
+
+The compiler configuration uses `flag:VPI_MODULE_LIST=system.vpi` to emit runtime registration for the statically linked built-in tasks. It deliberately avoids `module:system.vpi`, which asks the WASM compiler for an unsupported dynamic load and emits a misleading error even when the resulting simulation runs. Actual compiler and runtime diagnostics remain intact. All exercise solutions are verified through the same `grade()` function used in the UI.
