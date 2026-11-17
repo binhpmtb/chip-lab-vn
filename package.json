@@ -1,0 +1,36 @@
+{
+  "name": "chip-lab-vn",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "license": "GPL-2.0-or-later",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "lint": "eslint app components lib tests",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write app components lib tests content docs *.json *.md",
+    "format:check": "prettier --check app components lib tests content docs *.json *.md",
+    "test": "tsx --test tests/*.test.ts && node --test tests/vcd.test.mjs && node tests/engine-smoke.mjs && node tests/exercises.mjs"
+  },
+  "dependencies": {
+    "next": "16.4.6",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "@uiw/react-codemirror": "4.25.8",
+    "@codemirror/language": "6.12.1",
+    "@codemirror/legacy-modes": "6.5.2",
+    "react-markdown": "10.1.0",
+    "lucide-react": "0.468.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.6",
+    "prettier": "^3.6.2",
+    "tsx": "^4.20.6"
+  }
+}
