@@ -1,0 +1,502 @@
+[
+  {
+    "id": "and-gate",
+    "module": "fundamentals",
+    "title": {
+      "vi": "Cổng AND",
+      "en": "AND gate"
+    },
+    "prompt": {
+      "vi": "Viết Cổng AND hai đầu vào a, b và đầu ra y. Kiểm tra đủ bốn tổ hợp.",
+      "en": "Implement a two-input AND gate with inputs a, b and output y. Test all four combinations."
+    },
+    "hints": {
+      "vi": [
+        "Xác định độ rộng của từng cổng trước khi viết biểu thức.",
+        "Dùng assign hoặc always @*; gán đầu ra ở mọi nhánh."
+      ],
+      "en": [
+        "Check the width of each port before writing an expression.",
+        "Use assign or always @*; assign outputs on every branch."
+      ]
+    },
+    "starter": "module top(input a, b, output y);\n  // TODO: implement the circuit described above.\nendmodule\n",
+    "solution": "module top(input a, b, output y);\n  assign y = a & b;\nendmodule\n",
+    "testbench": "`timescale 1ns/1ps\nmodule tb;\nreg a,b; wire y; integer i;\ntop dut(.a(a),.b(b),.y(y));\ninitial begin\n  $dumpfile(\"dump.vcd\"); $dumpvars(0,tb);\n  for(i=0;i<4;i=i+1) begin {a,b}=i; #2; if(y !== (a & b)) $fatal(1,\"Truth table mismatch\"); end\n  $display(\"CHIPLAB_PASS_and-gate\");\n  $finish;\nend\ninitial begin #10000; $fatal(1,\"Testbench timeout\"); end\nendmodule\n"
+  },
+  {
+    "id": "xor",
+    "module": "fundamentals",
+    "title": {
+      "vi": "Cổng XOR",
+      "en": "XOR gate"
+    },
+    "prompt": {
+      "vi": "Viết Cổng XOR hai đầu vào a, b và đầu ra y. Kiểm tra đủ bốn tổ hợp.",
+      "en": "Implement a two-input XOR gate with inputs a, b and output y. Test all four combinations."
+    },
+    "hints": {
+      "vi": [
+        "Xác định độ rộng của từng cổng trước khi viết biểu thức.",
+        "Dùng assign hoặc always @*; gán đầu ra ở mọi nhánh."
+      ],
+      "en": [
+        "Check the width of each port before writing an expression.",
+        "Use assign or always @*; assign outputs on every branch."
+      ]
+    },
+    "starter": "module top(input a, b, output y);\n  // TODO: implement the circuit described above.\nendmodule\n",
+    "solution": "module top(input a, b, output y);\n  assign y = a ^ b;\nendmodule\n",
+    "testbench": "`timescale 1ns/1ps\nmodule tb;\nreg a,b; wire y; integer i;\ntop dut(.a(a),.b(b),.y(y));\ninitial begin\n  $dumpfile(\"dump.vcd\"); $dumpvars(0,tb);\n  for(i=0;i<4;i=i+1) begin {a,b}=i; #2; if(y !== (a ^ b)) $fatal(1,\"Truth table mismatch\"); end\n  $display(\"CHIPLAB_PASS_xor\");\n  $finish;\nend\ninitial begin #10000; $fatal(1,\"Testbench timeout\"); end\nendmodule\n"
+  },
+  {
+    "id": "inverter",
+    "module": "fundamentals",
+    "title": {
+      "vi": "Cổng đảo",
+      "en": "Inverter"
+    },
+    "prompt": {
+      "vi": "Đầu ra y bằng phủ định bit của a.",
+      "en": "Output y is the bitwise complement of a."
+    },
+    "hints": {
+      "vi": [
+        "Xác định độ rộng của từng cổng trước khi viết biểu thức.",
+        "Dùng assign hoặc always @*; gán đầu ra ở mọi nhánh."
+      ],
+      "en": [
+        "Check the width of each port before writing an expression.",
+        "Use assign or always @*; assign outputs on every branch."
+      ]
+    },
+    "starter": "module top(input a, output y);\n  // TODO: implement the circuit described above.\nendmodule\n",
+    "solution": "module top(input a, output y);\n  assign y = ~a;\nendmodule\n",
+    "testbench": "`timescale 1ns/1ps\nmodule tb;\nreg a; wire y; integer i;\ntop dut(.a(a),.y(y));\ninitial begin\n  $dumpfile(\"dump.vcd\"); $dumpvars(0,tb);\n  for(i=0;i<2;i=i+1) begin a=i; #2; if(y !== ~a) $fatal(1,\"Inversion mismatch\"); end\n  $display(\"CHIPLAB_PASS_inverter\");\n  $finish;\nend\ninitial begin #10000; $fatal(1,\"Testbench timeout\"); end\nendmodule\n"
+  },
+  {
+    "id": "half-adder",
+    "module": "combinational",
+    "title": {
+      "vi": "Bộ cộng bán phần",
+      "en": "Half adder"
+    },
+    "prompt": {
+      "vi": "Cộng hai bit a và b, xuất sum và bit nhớ carry.",
+      "en": "Add bits a and b, producing sum and carry."
+    },
+    "hints": {
+      "vi": [
+        "Xác định độ rộng của từng cổng trước khi viết biểu thức.",
+        "Dùng assign hoặc always @*; gán đầu ra ở mọi nhánh."
+      ],
+      "en": [
+        "Check the width of each port before writing an expression.",
+        "Use assign or always @*; assign outputs on every branch."
+      ]
+    },
+    "starter": "module top(input a,b, output sum,carry);\n  // TODO: implement the circuit described above.\nendmodule\n",
+    "solution": "module top(input a,b, output sum,carry);\n  assign {carry,sum} = {1'b0,a} + {1'b0,b};\nendmodule\n",
+    "testbench": "`timescale 1ns/1ps\nmodule tb;\nreg a,b; wire sum,carry; integer i;\ntop dut(.a(a),.b(b),.sum(sum),.carry(carry));\ninitial begin\n  $dumpfile(\"dump.vcd\"); $dumpvars(0,tb);\n  for(i=0;i<4;i=i+1) begin {a,b}=i; #2; if({carry,sum} !== ({1'b0,a}+{1'b0,b})) $fatal(1,\"Sum mismatch\"); end\n  $display(\"CHIPLAB_PASS_half-adder\");\n  $finish;\nend\ninitial begin #10000; $fatal(1,\"Testbench timeout\"); end\nendmodule\n"
+  },
+  {
+    "id": "mux",
+    "module": "combinational",
+    "title": {
+      "vi": "MUX 2 chọn 1",
+      "en": "2-to-1 mux"
+    },
+    "prompt": {
+      "vi": "Khi sel=0 chọn a, khi sel=1 chọn b. Dữ liệu rộng 4 bit.",
+      "en": "Select a when sel=0 and b when sel=1. Data is four bits wide."
+    },
+    "hints": {
+      "vi": [
+        "Xác định độ rộng của từng cổng trước khi viết biểu thức.",
+        "Dùng assign hoặc always @*; gán đầu ra ở mọi nhánh."
+      ],
+      "en": [
+        "Check the width of each port before writing an expression.",
+        "Use assign or always @*; assign outputs on every branch."
+      ]
+    },
+    "starter": "module top(input [3:0] a,b, input sel, output [3:0] y);\n  // TODO: implement the circuit described above.\nendmodule\n",
+    "solution": "module top(input [3:0] a,b, input sel, output [3:0] y);\n  assign y = sel ? b : a;\nendmodule\n",
+    "testbench": "`timescale 1ns/1ps\nmodule tb;\nreg [3:0] a,b; reg sel; wire [3:0] y; integer i;\ntop dut(.a(a),.b(b),.sel(sel),.y(y));\ninitial begin\n  $dumpfile(\"dump.vcd\"); $dumpvars(0,tb);\n  for(i=0;i<512;i=i+1) begin {sel,a,b}=i; #2; if(y !== (sel ? b : a)) $fatal(1,\"Mux mismatch\"); end\n  $display(\"CHIPLAB_PASS_mux\");\n  $finish;\nend\ninitial begin #10000; $fatal(1,\"Testbench timeout\"); end\nendmodule\n"
+  },
+  {
+    "id": "decoder",
+    "module": "combinational",
+    "title": {
+      "vi": "Giải mã 2 sang 4",
+      "en": "2-to-4 decoder"
+    },
+    "prompt": {
+      "vi": "Khi en=1 chỉ bit y[a] bằng 1. Khi en=0 mọi bit bằng 0.",
+      "en": "With en=1 only y[a] is high. With en=0 all bits are low."
+    },
+    "hints": {
+      "vi": [
+        "Xác định độ rộng của từng cổng trước khi viết biểu thức.",
+        "Dùng assign hoặc always @*; gán đầu ra ở mọi nhánh."
+      ],
+      "en": [
+        "Check the width of each port before writing an expression.",
+        "Use assign or always @*; assign outputs on every branch."
+      ]
+    },
+    "starter": "module top(input [1:0] a, input en, output [3:0] y);\n  // TODO: implement the circuit described above.\nendmodule\n",
+    "solution": "module top(input [1:0] a, input en, output [3:0] y);\n  assign y = en ? (4'b0001 << a) : 4'b0000;\nendmodule\n",
+    "testbench": "`timescale 1ns/1ps\nmodule tb;\nreg [1:0] a; reg en; wire [3:0] y; integer i;\ntop dut(.a(a),.en(en),.y(y));\ninitial begin\n  $dumpfile(\"dump.vcd\"); $dumpvars(0,tb);\n  for(i=0;i<8;i=i+1) begin {en,a}=i; #2; if(y !== (en ? (4'b1 << a) : 4'b0)) $fatal(1,\"Decode mismatch\"); end\n  $display(\"CHIPLAB_PASS_decoder\");\n  $finish;\nend\ninitial begin #10000; $fatal(1,\"Testbench timeout\"); end\nendmodule\n"
+  },
+  {
+    "id": "adder",
+    "module": "combinational",
+    "title": {
+      "vi": "Bộ cộng 4 bit",
+      "en": "4-bit adder"
+    },
+    "prompt": {
+      "vi": "Cộng hai số không dấu 4 bit, giữ bit nhớ trong y[4].",
+      "en": "Add two unsigned four-bit numbers, retaining carry in y[4]."
+    },
+    "hints": {
+      "vi": [
+        "Xác định độ rộng của từng cổng trước khi viết biểu thức.",
+        "Dùng assign hoặc always @*; gán đầu ra ở mọi nhánh."
+      ],
+      "en": [
+        "Check the width of each port before writing an expression.",
+        "Use assign or always @*; assign outputs on every branch."
+      ]
+    },
+    "starter": "module top(input [3:0] a,b, output [4:0] y);\n  // TODO: implement the circuit described above.\nendmodule\n",
+    "solution": "module top(input [3:0] a,b, output [4:0] y);\n  assign y = {1'b0,a} + {1'b0,b};\nendmodule\n",
+    "testbench": "`timescale 1ns/1ps\nmodule tb;\nreg [3:0] a,b; wire [4:0] y; integer i;\ntop dut(.a(a),.b(b),.y(y));\ninitial begin\n  $dumpfile(\"dump.vcd\"); $dumpvars(0,tb);\n  for(i=0;i<256;i=i+1) begin {a,b}=i; #2; if(y !== ({1'b0,a}+{1'b0,b})) $fatal(1,\"Adder mismatch\"); end\n  $display(\"CHIPLAB_PASS_adder\");\n  $finish;\nend\ninitial begin #10000; $fatal(1,\"Testbench timeout\"); end\nendmodule\n"
+  },
+  {
+    "id": "alu",
+    "module": "combinational",
+    "title": {
+      "vi": "ALU hai phép toán",
+      "en": "Two-operation ALU"
+    },
+    "prompt": {
+      "vi": "op=0 cộng modulo 16; op=1 AND theo bit.",
+      "en": "op=0 adds modulo 16; op=1 performs bitwise AND."
+    },
+    "hints": {
+      "vi": [
+        "Xác định độ rộng của từng cổng trước khi viết biểu thức.",
+        "Dùng assign hoặc always @*; gán đầu ra ở mọi nhánh."
+      ],
+      "en": [
+        "Check the width of each port before writing an expression.",
+        "Use assign or always @*; assign outputs on every branch."
+      ]
+    },
+    "starter": "module top(input [3:0] a,b, input op, output [3:0] y);\n  // TODO: implement the circuit described above.\nendmodule\n",
+    "solution": "module top(input [3:0] a,b, input op, output [3:0] y);\n  assign y = op ? (a & b) : (a + b);\nendmodule\n",
+    "testbench": "`timescale 1ns/1ps\nmodule tb;\nreg [3:0] a,b; reg op; wire [3:0] y; reg [3:0] expected; integer i;\ntop dut(.a(a),.b(b),.op(op),.y(y));\ninitial begin\n  $dumpfile(\"dump.vcd\"); $dumpvars(0,tb);\n  for(i=0;i<512;i=i+1) begin {op,a,b}=i; expected=op ? (a & b) : (a+b); #2; if(y !== expected) $fatal(1,\"ALU mismatch\"); end\n  $display(\"CHIPLAB_PASS_alu\");\n  $finish;\nend\ninitial begin #10000; $fatal(1,\"Testbench timeout\"); end\nendmodule\n"
+  },
+  {
+    "id": "dff",
+    "module": "sequential",
+    "title": {
+      "vi": "Flip-flop D",
+      "en": "D flip-flop"
+    },
+    "prompt": {
+      "vi": "Chốt d tại cạnh lên. rst đồng bộ mức cao đưa q về 0.",
+      "en": "Capture d at the rising edge. Synchronous active-high rst clears q."
+    },
+    "hints": {
+      "vi": [
+        "Cập nhật thanh ghi ở posedge clk bằng phép gán <=.",
+        "Trong testbench, đổi đầu vào ở cạnh xuống và kiểm tra sau cạnh lên."
+      ],
+      "en": [
+        "Update registers on posedge clk using nonblocking <= assignments.",
+        "Drive inputs on falling edges and check after rising edges."
+      ]
+    },
+    "starter": "module top(input clk,rst,d, output reg q);\n  // TODO: implement the circuit described above.\nendmodule\n",
+    "solution": "module top(input clk,rst,d, output reg q);\n  always @(posedge clk) if(rst) q<=0; else q<=d;\nendmodule\n",
+    "testbench": "`timescale 1ns/1ps\nmodule tb;\nreg clk=0; always #5 clk=~clk;\nreg rst,d; wire q; integer i;\ntop dut(.clk(clk),.rst(rst),.d(d),.q(q));\ninitial begin\n  $dumpfile(\"dump.vcd\"); $dumpvars(0,tb);\n  rst=1; d=1; @(posedge clk); #1; if(q!==0) $fatal(1,\"Reset\");\n  for(i=0;i<8;i=i+1) begin @(negedge clk); rst=0; d=i%2; @(posedge clk); #1; if(q!==d) $fatal(1,\"Capture\"); end\n  $display(\"CHIPLAB_PASS_dff\");\n  $finish;\nend\ninitial begin #10000; $fatal(1,\"Testbench timeout\"); end\nendmodule\n"
+  },
+  {
+    "id": "register-enable",
+    "module": "sequential",
+    "title": {
+      "vi": "Thanh ghi có enable",
+      "en": "Enabled register"
+    },
+    "prompt": {
+      "vi": "Thanh ghi 4 bit. rst đồng bộ xóa về 0. Chỉ nạp d khi en=1, còn lại giữ q.",
+      "en": "Four-bit register. Synchronous rst clears to zero. Load d only when en=1, otherwise retain q."
+    },
+    "hints": {
+      "vi": [
+        "Cập nhật thanh ghi ở posedge clk bằng phép gán <=.",
+        "Trong testbench, đổi đầu vào ở cạnh xuống và kiểm tra sau cạnh lên."
+      ],
+      "en": [
+        "Update registers on posedge clk using nonblocking <= assignments.",
+        "Drive inputs on falling edges and check after rising edges."
+      ]
+    },
+    "starter": "module top(input clk,rst,en, input [3:0] d, output reg [3:0] q);\n  // TODO: implement the circuit described above.\nendmodule\n",
+    "solution": "module top(input clk,rst,en, input [3:0] d, output reg [3:0] q);\n  always @(posedge clk) if(rst) q<=0; else if(en) q<=d;\nendmodule\n",
+    "testbench": "`timescale 1ns/1ps\nmodule tb;\nreg clk=0; always #5 clk=~clk;\nreg rst,en; reg [3:0] d,expected; wire [3:0] q; integer i;\ntop dut(.clk(clk),.rst(rst),.en(en),.d(d),.q(q));\ninitial begin\n  $dumpfile(\"dump.vcd\"); $dumpvars(0,tb);\n  rst=1; en=0; d=0; expected=0; @(posedge clk); #1; if(q!==0) $fatal(1,\"Reset\");\n  for(i=0;i<32;i=i+1) begin @(negedge clk); rst=0; en=i%3!=0; d=i; if(en) expected=d; @(posedge clk); #1; if(q!==expected) $fatal(1,\"Enable/hold\"); end\n  $display(\"CHIPLAB_PASS_register-enable\");\n  $finish;\nend\ninitial begin #10000; $fatal(1,\"Testbench timeout\"); end\nendmodule\n"
+  },
+  {
+    "id": "counter",
+    "module": "sequential",
+    "title": {
+      "vi": "Bộ đếm modulo 16",
+      "en": "Modulo-16 counter"
+    },
+    "prompt": {
+      "vi": "Đếm tăng mỗi cạnh lên, quay vòng từ 15 về 0. rst đồng bộ mức cao.",
+      "en": "Increment at every rising edge and wrap 15 to 0. Reset is synchronous active-high."
+    },
+    "hints": {
+      "vi": [
+        "Cập nhật thanh ghi ở posedge clk bằng phép gán <=.",
+        "Trong testbench, đổi đầu vào ở cạnh xuống và kiểm tra sau cạnh lên."
+      ],
+      "en": [
+        "Update registers on posedge clk using nonblocking <= assignments.",
+        "Drive inputs on falling edges and check after rising edges."
+      ]
+    },
+    "starter": "module top(input clk,rst, output reg [3:0] q);\n  // TODO: implement the circuit described above.\nendmodule\n",
+    "solution": "module top(input clk,rst, output reg [3:0] q);\n  always @(posedge clk) if(rst) q<=0; else q<=q+1'b1;\nendmodule\n",
+    "testbench": "`timescale 1ns/1ps\nmodule tb;\nreg clk=0; always #5 clk=~clk;\nreg rst; wire [3:0] q; reg [3:0] expected; integer i;\ntop dut(.clk(clk),.rst(rst),.q(q));\ninitial begin\n  $dumpfile(\"dump.vcd\"); $dumpvars(0,tb);\n  rst=1; expected=0; @(posedge clk); #1; if(q!==0) $fatal(1,\"Reset\");\n  @(negedge clk); rst=0; for(i=0;i<35;i=i+1) begin @(posedge clk); expected=expected+1; #1; if(q!==expected) $fatal(1,\"Count/wrap\"); end\n  $display(\"CHIPLAB_PASS_counter\");\n  $finish;\nend\ninitial begin #10000; $fatal(1,\"Testbench timeout\"); end\nendmodule\n"
+  },
+  {
+    "id": "edge-detector",
+    "module": "sequential",
+    "title": {
+      "vi": "Phát hiện cạnh lên",
+      "en": "Rising-edge detector"
+    },
+    "prompt": {
+      "vi": "Xuất xung pulse một chu kỳ khi mẫu d chuyển từ 0 lên 1. Reset đồng bộ xóa lịch sử và pulse.",
+      "en": "Generate a one-cycle pulse when sampled d changes from zero to one. Synchronous reset clears history and pulse."
+    },
+    "hints": {
+      "vi": [
+        "Cập nhật thanh ghi ở posedge clk bằng phép gán <=.",
+        "Trong testbench, đổi đầu vào ở cạnh xuống và kiểm tra sau cạnh lên."
+      ],
+      "en": [
+        "Update registers on posedge clk using nonblocking <= assignments.",
+        "Drive inputs on falling edges and check after rising edges."
+      ]
+    },
+    "starter": "module top(input clk,rst,d, output reg pulse);\n  // TODO: implement the circuit described above.\nendmodule\n",
+    "solution": "module top(input clk,rst,d, output reg pulse);\n  reg previous;\n  always @(posedge clk) begin\n    if(rst) begin previous<=0; pulse<=0; end\n    else begin pulse<=d & ~previous; previous<=d; end\n  end\nendmodule\n",
+    "testbench": "`timescale 1ns/1ps\nmodule tb;\nreg clk=0; always #5 clk=~clk;\nreg rst,d,previous,expected; wire pulse; integer i;\ntop dut(.clk(clk),.rst(rst),.d(d),.pulse(pulse));\ninitial begin\n  $dumpfile(\"dump.vcd\"); $dumpvars(0,tb);\n  rst=1; d=0; previous=0; @(posedge clk); #1; if(pulse!==0) $fatal(1,\"Reset\");\n  for(i=0;i<16;i=i+1) begin @(negedge clk); rst=0; d=(i%4)<2; expected=d & ~previous; previous=d; @(posedge clk); #1; if(pulse!==expected) $fatal(1,\"Edge detection\"); end\n  $display(\"CHIPLAB_PASS_edge-detector\");\n  $finish;\nend\ninitial begin #10000; $fatal(1,\"Testbench timeout\"); end\nendmodule\n"
+  },
+  {
+    "id": "vector-slice",
+    "module": "verilog",
+    "title": {
+      "vi": "Tách nibble",
+      "en": "Nibble extraction"
+    },
+    "prompt": {
+      "vi": "Đưa bốn bit cao của a ra high, bốn bit thấp ra low.",
+      "en": "Route the upper nibble of a to high and lower nibble to low."
+    },
+    "hints": {
+      "vi": [
+        "Xác định độ rộng của từng cổng trước khi viết biểu thức.",
+        "Dùng assign hoặc always @*; gán đầu ra ở mọi nhánh."
+      ],
+      "en": [
+        "Check the width of each port before writing an expression.",
+        "Use assign or always @*; assign outputs on every branch."
+      ]
+    },
+    "starter": "module top(input [7:0] a, output [3:0] high,low);\n  // TODO: implement the circuit described above.\nendmodule\n",
+    "solution": "module top(input [7:0] a, output [3:0] high,low);\n  assign high=a[7:4];\n  assign low=a[3:0];\nendmodule\n",
+    "testbench": "`timescale 1ns/1ps\nmodule tb;\nreg [7:0] a; wire [3:0] high,low; integer i;\ntop dut(.a(a),.high(high),.low(low));\ninitial begin\n  $dumpfile(\"dump.vcd\"); $dumpvars(0,tb);\n  for(i=0;i<256;i=i+1) begin a=i; #2; if({high,low} !== a) $fatal(1,\"Slice mismatch\"); end\n  $display(\"CHIPLAB_PASS_vector-slice\");\n  $finish;\nend\ninitial begin #10000; $fatal(1,\"Testbench timeout\"); end\nendmodule\n"
+  },
+  {
+    "id": "parity",
+    "module": "verilog",
+    "title": {
+      "vi": "Parity chẵn",
+      "en": "Even parity bit"
+    },
+    "prompt": {
+      "vi": "Tạo p để tổng số bit 1 trong {a,p} là số chẵn.",
+      "en": "Generate p so that the number of ones in {a,p} is even."
+    },
+    "hints": {
+      "vi": [
+        "Xác định độ rộng của từng cổng trước khi viết biểu thức.",
+        "Dùng assign hoặc always @*; gán đầu ra ở mọi nhánh."
+      ],
+      "en": [
+        "Check the width of each port before writing an expression.",
+        "Use assign or always @*; assign outputs on every branch."
+      ]
+    },
+    "starter": "module top(input [7:0] a, output p);\n  // TODO: implement the circuit described above.\nendmodule\n",
+    "solution": "module top(input [7:0] a, output p);\n  assign p=^a;\nendmodule\n",
+    "testbench": "`timescale 1ns/1ps\nmodule tb;\nreg [7:0] a; wire p; integer i;\ntop dut(.a(a),.p(p));\ninitial begin\n  $dumpfile(\"dump.vcd\"); $dumpvars(0,tb);\n  for(i=0;i<256;i=i+1) begin a=i; #2; if(p !== ^a) $fatal(1,\"Parity mismatch\"); end\n  $display(\"CHIPLAB_PASS_parity\");\n  $finish;\nend\ninitial begin #10000; $fatal(1,\"Testbench timeout\"); end\nendmodule\n"
+  },
+  {
+    "id": "pipeline",
+    "module": "timing",
+    "title": {
+      "vi": "Pipeline hai tầng",
+      "en": "Two-stage pipeline"
+    },
+    "prompt": {
+      "vi": "Dùng hai tầng thanh ghi nối tiếp. Sau cạnh lên, q bằng d đã lấy mẫu ở cạnh lên trước đó. Reset đồng bộ xóa cả hai tầng.",
+      "en": "Use two serial register stages. After a rising edge, q equals d sampled at the preceding rising edge. Synchronous reset clears both stages."
+    },
+    "hints": {
+      "vi": [
+        "Cập nhật thanh ghi ở posedge clk bằng phép gán <=.",
+        "Trong testbench, đổi đầu vào ở cạnh xuống và kiểm tra sau cạnh lên."
+      ],
+      "en": [
+        "Update registers on posedge clk using nonblocking <= assignments.",
+        "Drive inputs on falling edges and check after rising edges."
+      ]
+    },
+    "starter": "module top(input clk,rst, input [3:0] d, output reg [3:0] q);\n  // TODO: implement the circuit described above.\nendmodule\n",
+    "solution": "module top(input clk,rst, input [3:0] d, output reg [3:0] q);\n  reg [3:0] stage;\n  always @(posedge clk) if(rst) begin stage<=0; q<=0; end else begin stage<=d; q<=stage; end\nendmodule\n",
+    "testbench": "`timescale 1ns/1ps\nmodule tb;\nreg clk=0; always #5 clk=~clk;\nreg rst; reg [3:0] d,stage,expected; wire [3:0] q; integer i;\ntop dut(.clk(clk),.rst(rst),.d(d),.q(q));\ninitial begin\n  $dumpfile(\"dump.vcd\"); $dumpvars(0,tb);\n  rst=1; d=0; stage=0; expected=0; @(posedge clk); #1; if(q!==0) $fatal(1,\"Reset\");\n  for(i=0;i<20;i=i+1) begin @(negedge clk); rst=0; d=i; expected=stage; stage=d; @(posedge clk); #1; if(q!==expected) $fatal(1,\"Pipeline latency\"); end\n  $display(\"CHIPLAB_PASS_pipeline\");\n  $finish;\nend\ninitial begin #10000; $fatal(1,\"Testbench timeout\"); end\nendmodule\n"
+  },
+  {
+    "id": "synchronizer",
+    "module": "timing",
+    "title": {
+      "vi": "Đồng bộ một bit",
+      "en": "Single-bit synchronizer"
+    },
+    "prompt": {
+      "vi": "Viết chuỗi hai flip-flop lấy mẫu async_in. Reset đồng bộ xóa cả hai. Mô phỏng số chỉ kiểm tra độ trễ, không chứng minh khả năng chống metastability.",
+      "en": "Implement two serial flip-flops sampling async_in with synchronous clear. Digital simulation checks latency, not analog metastability reliability."
+    },
+    "hints": {
+      "vi": [
+        "Cập nhật thanh ghi ở posedge clk bằng phép gán <=.",
+        "Trong testbench, đổi đầu vào ở cạnh xuống và kiểm tra sau cạnh lên."
+      ],
+      "en": [
+        "Update registers on posedge clk using nonblocking <= assignments.",
+        "Drive inputs on falling edges and check after rising edges."
+      ]
+    },
+    "starter": "module top(input clk,rst,async_in, output reg sync_out);\n  // TODO: implement the circuit described above.\nendmodule\n",
+    "solution": "module top(input clk,rst,async_in, output reg sync_out);\n  reg meta;\n  always @(posedge clk) if(rst) begin meta<=0; sync_out<=0; end else begin meta<=async_in; sync_out<=meta; end\nendmodule\n",
+    "testbench": "`timescale 1ns/1ps\nmodule tb;\nreg clk=0; always #5 clk=~clk;\nreg rst,async_in,stage,expected; wire sync_out; integer i;\ntop dut(.clk(clk),.rst(rst),.async_in(async_in),.sync_out(sync_out));\ninitial begin\n  $dumpfile(\"dump.vcd\"); $dumpvars(0,tb);\n  rst=1; async_in=0; stage=0; @(posedge clk); #1; if(sync_out!==0) $fatal(1,\"Reset\");\n  for(i=0;i<12;i=i+1) begin @(negedge clk); rst=0; async_in=i%3==0; expected=stage; stage=async_in; @(posedge clk); #1; if(sync_out!==expected) $fatal(1,\"Stage delay\"); end\n  $display(\"CHIPLAB_PASS_synchronizer\");\n  $finish;\nend\ninitial begin #10000; $fatal(1,\"Testbench timeout\"); end\nendmodule\n"
+  },
+  {
+    "id": "demorgan",
+    "module": "synthesis",
+    "title": {
+      "vi": "Tương đương De Morgan",
+      "en": "De Morgan equivalence"
+    },
+    "prompt": {
+      "vi": "Viết NAND bằng OR và NOT theo De Morgan. Sau đó tổng hợp và so sánh với ~(a & b). Bài chấm tính tương đương chức năng.",
+      "en": "Express NAND using OR and NOT via De Morgan, then synthesize and compare with ~(a & b). Grading checks functional equivalence."
+    },
+    "hints": {
+      "vi": [
+        "Xác định độ rộng của từng cổng trước khi viết biểu thức.",
+        "Dùng assign hoặc always @*; gán đầu ra ở mọi nhánh."
+      ],
+      "en": [
+        "Check the width of each port before writing an expression.",
+        "Use assign or always @*; assign outputs on every branch."
+      ]
+    },
+    "starter": "module top(input a,b, output y);\n  // TODO: implement the circuit described above.\nendmodule\n",
+    "solution": "module top(input a,b, output y);\n  assign y=(~a)|(~b);\nendmodule\n",
+    "testbench": "`timescale 1ns/1ps\nmodule tb;\nreg a,b; wire y; integer i;\ntop dut(.a(a),.b(b),.y(y));\ninitial begin\n  $dumpfile(\"dump.vcd\"); $dumpvars(0,tb);\n  for(i=0;i<4;i=i+1) begin {a,b}=i; #2; if(y !== ~(a&b)) $fatal(1,\"Equivalence\"); end\n  $display(\"CHIPLAB_PASS_demorgan\");\n  $finish;\nend\ninitial begin #10000; $fatal(1,\"Testbench timeout\"); end\nendmodule\n"
+  },
+  {
+    "id": "priority",
+    "module": "synthesis",
+    "title": {
+      "vi": "Bộ mã hóa ưu tiên",
+      "en": "Priority encoder"
+    },
+    "prompt": {
+      "vi": "Ưu tiên bit req có chỉ số lớn nhất. valid=1 nếu có yêu cầu. Khi req=0, index=0 và valid=0. Gán đủ nhánh để tránh latch.",
+      "en": "Choose the highest asserted req index. valid indicates any request. For req=0 return index=0, valid=0. Cover every branch to avoid latches."
+    },
+    "hints": {
+      "vi": [
+        "Xác định độ rộng của từng cổng trước khi viết biểu thức.",
+        "Dùng assign hoặc always @*; gán đầu ra ở mọi nhánh."
+      ],
+      "en": [
+        "Check the width of each port before writing an expression.",
+        "Use assign or always @*; assign outputs on every branch."
+      ]
+    },
+    "starter": "module top(input [3:0] req, output reg [1:0] index, output valid);\n  // TODO: implement the circuit described above.\nendmodule\n",
+    "solution": "module top(input [3:0] req, output reg [1:0] index, output valid);\n  assign valid=|req;\n  always @* begin\n    if(req[3]) index=3; else if(req[2]) index=2; else if(req[1]) index=1; else index=0;\n  end\nendmodule\n",
+    "testbench": "`timescale 1ns/1ps\nmodule tb;\nreg [3:0] req; wire [1:0] index; wire valid; reg [1:0] expected; integer i;\ntop dut(.req(req),.index(index),.valid(valid));\ninitial begin\n  $dumpfile(\"dump.vcd\"); $dumpvars(0,tb);\n  for(i=0;i<16;i=i+1) begin req=i; expected=req[3]?3:req[2]?2:req[1]?1:0; #2; if(index!==expected || valid!==( |req)) $fatal(1,\"Priority\"); end\n  $display(\"CHIPLAB_PASS_priority\");\n  $finish;\nend\ninitial begin #10000; $fatal(1,\"Testbench timeout\"); end\nendmodule\n"
+  },
+  {
+    "id": "reset-counter",
+    "module": "physical",
+    "title": {
+      "vi": "Reset bất đồng bộ",
+      "en": "Asynchronous reset"
+    },
+    "prompt": {
+      "vi": "Đếm 4 bit và xóa ngay khi rst lên 1, kể cả giữa hai cạnh clock. Trong silicon, nhả reset cần xem xét recovery/removal và đồng bộ theo miền clock.",
+      "en": "Build a four-bit counter cleared immediately when rst rises, including between clock edges. Silicon reset release requires recovery/removal checks and clock-domain synchronization."
+    },
+    "hints": {
+      "vi": [
+        "Cập nhật thanh ghi ở posedge clk bằng phép gán <=.",
+        "Trong testbench, đổi đầu vào ở cạnh xuống và kiểm tra sau cạnh lên."
+      ],
+      "en": [
+        "Update registers on posedge clk using nonblocking <= assignments.",
+        "Drive inputs on falling edges and check after rising edges."
+      ]
+    },
+    "starter": "module top(input clk,rst, output reg [3:0] q);\n  // TODO: implement the circuit described above.\nendmodule\n",
+    "solution": "module top(input clk,rst, output reg [3:0] q);\n  always @(posedge clk or posedge rst) if(rst) q<=0; else q<=q+1'b1;\nendmodule\n",
+    "testbench": "`timescale 1ns/1ps\nmodule tb;\nreg clk=0; always #5 clk=~clk;\nreg rst; wire [3:0] q; integer i;\ntop dut(.clk(clk),.rst(rst),.q(q));\ninitial begin\n  $dumpfile(\"dump.vcd\"); $dumpvars(0,tb);\n  rst=0; #2; rst=1; #1; if(q!==0) $fatal(1,\"Async reset\"); @(negedge clk); rst=0;\n  for(i=1;i<6;i=i+1) begin @(posedge clk); #1; if(q!==i) $fatal(1,\"Count\"); end\n  #1; rst=1; #1; if(q!==0) $fatal(1,\"Immediate reset\");\n  $display(\"CHIPLAB_PASS_reset-counter\");\n  $finish;\nend\ninitial begin #10000; $fatal(1,\"Testbench timeout\"); end\nendmodule\n"
+  },
+  {
+    "id": "clock-enable",
+    "module": "physical",
+    "title": {
+      "vi": "Enable thay clock tự tạo",
+      "en": "Clock enable"
+    },
+    "prompt": {
+      "vi": "Chỉ tăng bộ đếm khi en=1 tại cạnh lên clock. Dùng clock gốc và clock enable. Reset đồng bộ. Xem netlist để quan sát đường feedback và mux.",
+      "en": "Increment only when en=1 at a rising clock edge. Use the original clock and an enable. Reset is synchronous. Inspect the feedback and mux in the netlist."
+    },
+    "hints": {
+      "vi": [
+        "Cập nhật thanh ghi ở posedge clk bằng phép gán <=.",
+        "Trong testbench, đổi đầu vào ở cạnh xuống và kiểm tra sau cạnh lên."
+      ],
+      "en": [
+        "Update registers on posedge clk using nonblocking <= assignments.",
+        "Drive inputs on falling edges and check after rising edges."
+      ]
+    },
+    "starter": "module top(input clk,rst,en, output reg [3:0] q);\n  // TODO: implement the circuit described above.\nendmodule\n",
+    "solution": "module top(input clk,rst,en, output reg [3:0] q);\n  always @(posedge clk) if(rst) q<=0; else if(en) q<=q+1'b1;\nendmodule\n",
+    "testbench": "`timescale 1ns/1ps\nmodule tb;\nreg clk=0; always #5 clk=~clk;\nreg rst,en; wire [3:0] q; reg [3:0] expected; integer i;\ntop dut(.clk(clk),.rst(rst),.en(en),.q(q));\ninitial begin\n  $dumpfile(\"dump.vcd\"); $dumpvars(0,tb);\n  rst=1; en=0; expected=0; @(posedge clk); #1; if(q!==0) $fatal(1,\"Reset\");\n  for(i=0;i<40;i=i+1) begin @(negedge clk); rst=0; en=i%3==0; if(en) expected=expected+1; @(posedge clk); #1; if(q!==expected) $fatal(1,\"Enable count\"); end\n  $display(\"CHIPLAB_PASS_clock-enable\");\n  $finish;\nend\ninitial begin #10000; $fatal(1,\"Testbench timeout\"); end\nendmodule\n"
+  }
+]

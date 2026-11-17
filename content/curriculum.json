@@ -1,0 +1,281 @@
+{
+  "modules": [
+    {
+      "id": "fundamentals",
+      "title": {
+        "vi": "Nền tảng logic số",
+        "en": "Digital foundations"
+      }
+    },
+    {
+      "id": "combinational",
+      "title": {
+        "vi": "Mạch tổ hợp",
+        "en": "Combinational logic"
+      }
+    },
+    {
+      "id": "sequential",
+      "title": {
+        "vi": "Mạch tuần tự",
+        "en": "Sequential logic"
+      }
+    },
+    {
+      "id": "verilog",
+      "title": {
+        "vi": "Verilog và testbench",
+        "en": "Verilog and testbenches"
+      }
+    },
+    {
+      "id": "timing",
+      "title": {
+        "vi": "Clock và timing",
+        "en": "Clocks and timing"
+      }
+    },
+    {
+      "id": "synthesis",
+      "title": {
+        "vi": "Tổng hợp RTL",
+        "en": "RTL synthesis"
+      }
+    },
+    {
+      "id": "physical",
+      "title": {
+        "vi": "Từ RTL đến GDSII",
+        "en": "From RTL to GDSII"
+      }
+    }
+  ],
+  "lessons": [
+    {
+      "id": "binary",
+      "module": "fundamentals",
+      "title": {
+        "vi": "Bit, nhị phân và độ rộng",
+        "en": "Bits, binary and width"
+      },
+      "body": {
+        "vi": "## Mục tiêu\n\nĐọc một giá trị nhị phân và xác định số bit cần để lưu nó. Với n bit không dấu, miền giá trị là 0 đến 2^n − 1. Ví dụ 4'b1010 biểu diễn 10. Các chữ số có trọng số 8, 4, 2, 1 từ trái sang phải.\n\n## Độ rộng là một phần của thiết kế\n\nMột tổng có thể cần thêm bit nhớ. Tổng hai số 4 bit có giá trị tối đa 30, nên cần 5 bit. Nếu chỉ giữ 4 bit, kết quả được lấy modulo 16. Đừng để việc cắt bit xảy ra ngoài ý muốn.\n\nTrong Verilog, literal có thể chỉ rõ độ rộng và cơ số. Dùng 4'd10 khi muốn thể hiện giá trị thập phân trong 4 bit. Một bit chưa khởi tạo có thể là X trong mô phỏng. X là thông tin chưa biết, vì vậy cần kiểm tra reset trước khi kết luận mạch sai.\n\n## Thử trong playground\n\nĐọc tên cổng và độ rộng trước khi chạy. Mở ví dụ tương ứng, sửa một biểu thức và chạy lại testbench. Quan sát cả đầu ra lẫn thông báo lỗi.\n\n```verilog\nmodule top(input [3:0] a, b, output [4:0] y);\n  assign y = {1'b0, a} + {1'b0, b};\nendmodule\n```\n",
+        "en": "## Goal\n\nRead a binary value and determine how many bits it needs. An unsigned n-bit value ranges from zero through 2^n − 1. For example, 4'b1010 represents ten, with weights 8, 4, 2 and 1 from left to right.\n\n## Width is part of the design\n\nAdding two four-bit operands can produce thirty, requiring five result bits. Keeping only four bits gives a result modulo sixteen. Choose that behavior deliberately and preserve carry when it matters.\n\nVerilog literals can specify both width and base. Use 4'd10 for a four-bit decimal ten. A simulation value may contain X when it has not been initialized. X represents missing knowledge. Inspect reset and initialization before diagnosing the logic itself.\n\n## Try in the playground\n\nRead the port names and widths before running. Open the matching example, change one expression and rerun its testbench. Inspect the outputs and diagnostic messages.\n\n```verilog\nmodule top(input [3:0] a, b, output [4:0] y);\n  assign y = {1'b0, a} + {1'b0, b};\nendmodule\n```\n"
+      },
+      "exerciseIds": ["inverter"]
+    },
+    {
+      "id": "gates",
+      "module": "fundamentals",
+      "title": {
+        "vi": "Cổng logic và bảng chân trị",
+        "en": "Logic gates and truth tables"
+      },
+      "body": {
+        "vi": "## Mục tiêu\n\nChuyển một mô tả bằng lời thành bảng chân trị. AND chỉ bằng 1 khi cả hai đầu vào bằng 1. OR bằng 1 khi có ít nhất một đầu vào bằng 1. XOR bằng 1 khi hai đầu vào khác nhau. NOT đảo từng bit.\n\n## Kiểm thử đầy đủ\n\nMạch hai đầu vào một bit có bốn tổ hợp. Hãy thử 00, 01, 10 và 11. Bảng chân trị cung cấp một đặc tả nhỏ có thể kiểm tra toàn bộ. Với bus, toán tử & và | thao tác trên từng vị trí bit. Toán tử && và || kiểm tra giá trị logic của cả toán hạng.\n\nContinuous assignment mô tả quan hệ tổ hợp. Khi đầu vào đổi, bộ mô phỏng cập nhật đầu ra theo lịch sự kiện. Một phép gán không tự tạo clock hoặc phần tử nhớ.\n\n## Thử trong playground\n\nĐọc tên cổng và độ rộng trước khi chạy. Mở ví dụ tương ứng, sửa một biểu thức và chạy lại testbench. Quan sát cả đầu ra lẫn thông báo lỗi.\n\n```verilog\nmodule top(input a, b, output y);\n  assign y = a & b;\nendmodule\n```\n",
+        "en": "## Goal\n\nTranslate a verbal rule into a truth table. AND produces one only when both inputs are one. OR produces one when either input is one. XOR detects unequal input bits. NOT complements each bit.\n\n## Exhaustive checking\n\nTwo one-bit inputs have four combinations. Test 00, 01, 10 and 11. A truth table is a compact specification that can be checked exhaustively. With buses, & and | operate bit by bit. The && and || operators evaluate the logical truth of their operands instead.\n\nA continuous assignment describes combinational behavior. When an input changes, the simulator schedules an output update. An assignment alone does not create a clock or storage element. Compare the waveform against every row of your table.\n\n## Try in the playground\n\nRead the port names and widths before running. Open the matching example, change one expression and rerun its testbench. Inspect the outputs and diagnostic messages.\n\n```verilog\nmodule top(input a, b, output y);\n  assign y = a & b;\nendmodule\n```\n"
+      },
+      "exerciseIds": ["and-gate", "xor"]
+    },
+    {
+      "id": "boolean",
+      "module": "fundamentals",
+      "title": {
+        "vi": "Đại số Boolean và De Morgan",
+        "en": "Boolean algebra and De Morgan"
+      },
+      "body": {
+        "vi": "## Mục tiêu\n\nNhận biết hai biểu thức logic tương đương. Luật De Morgan cho biết ~(a & b) bằng ~a | ~b, và ~(a | b) bằng ~a & ~b. Dấu ngoặc làm rõ thứ tự tính toán và giúp tránh lỗi khi sửa RTL.\n\n## Từ biểu thức đến phần cứng\n\nHalf-adder có sum = a ^ b và carry = a & b. Hai đầu ra biểu diễn tổng hai bit. Hãy kiểm tra trường hợp a = b = 1, khi sum bằng 0 và carry bằng 1.\n\nRút gọn biểu thức có thể giảm logic, nhưng kết quả cuối phụ thuộc công cụ tổng hợp và thư viện cell. Hai cách viết khác nhau có thể được tối ưu về cùng netlist. Chứng minh bằng bảng chân trị cho mạch nhỏ trước khi so sánh số cell.\n\n## Thử trong playground\n\nĐọc tên cổng và độ rộng trước khi chạy. Mở ví dụ tương ứng, sửa một biểu thức và chạy lại testbench. Quan sát cả đầu ra lẫn thông báo lỗi.\n\n```verilog\nmodule top(input a, b, output sum, carry);\n  assign sum = a ^ b;\n  assign carry = a & b;\nendmodule\n```\n",
+        "en": "## Goal\n\nRecognize equivalent Boolean expressions. De Morgan's laws state that ~(a & b) equals ~a | ~b, and ~(a | b) equals ~a & ~b. Parentheses make evaluation order clear and reduce mistakes during RTL edits.\n\n## Expressions become hardware\n\nA half-adder uses sum = a ^ b and carry = a & b. Together its outputs represent the sum of two bits. Check a = b = 1 carefully. Sum becomes zero while carry becomes one.\n\nSimplification may reduce logic, but final mapping depends on synthesis passes and the cell library. Different expressions can produce the same optimized netlist. Prove equivalence with a truth table for small circuits before comparing cell counts. Functional correctness comes before area comparisons.\n\n## Try in the playground\n\nRead the port names and widths before running. Open the matching example, change one expression and rerun its testbench. Inspect the outputs and diagnostic messages.\n\n```verilog\nmodule top(input a, b, output sum, carry);\n  assign sum = a ^ b;\n  assign carry = a & b;\nendmodule\n```\n"
+      },
+      "exerciseIds": ["half-adder", "demorgan"]
+    },
+    {
+      "id": "mux",
+      "module": "combinational",
+      "title": {
+        "vi": "Multiplexer và chọn dữ liệu",
+        "en": "Multiplexers and data selection"
+      },
+      "body": {
+        "vi": "## Mục tiêu\n\nThiết kế mạch chọn một trong hai nguồn dữ liệu. Multiplexer 2:1 có hai đầu vào a, b, một tín hiệu chọn sel và một đầu ra y. Khi sel bằng 0, y lấy a. Khi sel bằng 1, y lấy b.\n\n## Đặc tả và kiểm tra\n\nToán tử điều kiện sel ? b : a diễn đạt trực tiếp quy tắc này. Một mux cho bus thực hiện lựa chọn trên tất cả bit. Testbench cần đổi cả sel và dữ liệu. Nếu a và b luôn giống nhau, một mux bị đảo lựa chọn có thể vẫn vượt qua kiểm thử.\n\nMux xuất hiện ở đầu vào thanh ghi, trong ALU và trên đường dữ liệu của CPU. Chuỗi mux quá dài có thể tăng trễ đường tổ hợp. Synthesis có thể đổi cấu trúc nhưng phải giữ hành vi quan sát được.\n\n## Thử trong playground\n\nĐọc tên cổng và độ rộng trước khi chạy. Mở ví dụ tương ứng, sửa một biểu thức và chạy lại testbench. Quan sát cả đầu ra lẫn thông báo lỗi.\n\n```verilog\nmodule top(input [3:0] a, b, input sel, output [3:0] y);\n  assign y = sel ? b : a;\nendmodule\n```\n",
+        "en": "## Goal\n\nBuild a circuit that selects one of two data sources. A 2:1 multiplexer has inputs a and b, a select signal sel, and output y. When sel is zero, y follows a. When sel is one, y follows b.\n\n## Specify and verify\n\nThe conditional expression sel ? b : a directly expresses the rule. A bus multiplexer selects every bit together. Test both select values and vary the data. If a and b always match, a reversed select condition can escape detection.\n\nMultiplexers appear before registers, inside ALUs and across CPU datapaths. Long chains of muxes can increase combinational delay. Synthesis may transform the structure while preserving observable behavior. Inspect both the truth table and the generated schematic.\n\n## Try in the playground\n\nRead the port names and widths before running. Open the matching example, change one expression and rerun its testbench. Inspect the outputs and diagnostic messages.\n\n```verilog\nmodule top(input [3:0] a, b, input sel, output [3:0] y);\n  assign y = sel ? b : a;\nendmodule\n```\n"
+      },
+      "exerciseIds": ["mux"]
+    },
+    {
+      "id": "decoder",
+      "module": "combinational",
+      "title": {
+        "vi": "Decoder và mã ưu tiên",
+        "en": "Decoders and priority encoding"
+      },
+      "body": {
+        "vi": "## Mục tiêu\n\nPhân biệt giải mã và mã hóa ưu tiên. Decoder 2 sang 4 bật một bit tương ứng với địa chỉ đầu vào. Mã 00 chọn bit 0, mã 11 chọn bit 3. Priority encoder nhận nhiều yêu cầu và chọn yêu cầu có ưu tiên cao nhất.\n\n## Tránh latch ngoài ý muốn\n\nTrong always @*, mỗi đầu ra cần được gán trên mọi nhánh. Hãy đặt giá trị mặc định trước case hoặc if. Nếu bỏ sót một nhánh, mạch có thể cần giữ giá trị trước đó và suy ra latch.\n\nThứ tự if/else thể hiện ưu tiên. Testbench cần thử nhiều yêu cầu cùng bật và trường hợp không có yêu cầu. Với decoder, kiểm tra đầu ra one-hot bằng cách đối chiếu từng địa chỉ với đúng một bit bật.\n\n## Thử trong playground\n\nĐọc tên cổng và độ rộng trước khi chạy. Mở ví dụ tương ứng, sửa một biểu thức và chạy lại testbench. Quan sát cả đầu ra lẫn thông báo lỗi.\n\n```verilog\nmodule top(input [1:0] a, output [3:0] y);\n  assign y = 4'b0001 << a;\nendmodule\n```\n",
+        "en": "## Goal\n\nDistinguish decoding from priority encoding. A two-to-four decoder asserts the output bit selected by its address. Address 00 selects bit zero and address 11 selects bit three. A priority encoder resolves multiple requests by choosing the highest-priority active input.\n\n## Avoid unintended latches\n\nIn an always @* block, assign each output along every control path. A default assignment before a case or if statement makes coverage explicit. An omitted assignment can imply that the previous value must be retained, inferring a latch.\n\nThe order of an if/else chain expresses priority. Test simultaneous requests and the no-request case. For a decoder, check every address against its expected one-hot output.\n\n## Try in the playground\n\nRead the port names and widths before running. Open the matching example, change one expression and rerun its testbench. Inspect the outputs and diagnostic messages.\n\n```verilog\nmodule top(input [1:0] a, output [3:0] y);\n  assign y = 4'b0001 << a;\nendmodule\n```\n"
+      },
+      "exerciseIds": ["decoder", "priority"]
+    },
+    {
+      "id": "alu",
+      "module": "combinational",
+      "title": {
+        "vi": "Adder và ALU nhỏ",
+        "en": "Adders and a small ALU"
+      },
+      "body": {
+        "vi": "## Mục tiêu\n\nKết hợp các phép toán thành một ALU. Opcode chọn phép cộng, AND, OR hoặc XOR. Độ rộng đầu ra quyết định có giữ carry hay chỉ lấy phần thấp của tổng. Điều này phải nằm trong đặc tả.\n\n## Trường hợp biên\n\nThử số 0, giá trị lớn nhất, và các toán hạng có mẫu bit xen kẽ. Với phép cộng 4 bit, 15 + 1 kiểm tra overflow. Với phép AND, 1010 và 0101 kiểm tra các bit độc lập.\n\nALU tổ hợp không cần clock. Đầu ra thay đổi khi dữ liệu hoặc opcode đổi. Sau synthesis, một số phép toán dùng chung logic và mux chọn kết quả. Số cell phụ thuộc mức tối ưu và cách ánh xạ, vì vậy hãy ghi lại lệnh tổng hợp khi so sánh hai phiên bản.\n\n## Thử trong playground\n\nĐọc tên cổng và độ rộng trước khi chạy. Mở ví dụ tương ứng, sửa một biểu thức và chạy lại testbench. Quan sát cả đầu ra lẫn thông báo lỗi.\n\n```verilog\nmodule top(input [3:0] a, b, input op, output [3:0] y);\n  assign y = op ? (a & b) : (a + b);\nendmodule\n```\n",
+        "en": "## Goal\n\nCombine several operations into an arithmetic logic unit. An opcode selects addition, AND, OR or XOR. The output width determines whether carry is retained or only the lower sum bits are kept. Include this behavior in the specification.\n\n## Boundary cases\n\nTest zero, the largest value and alternating bit patterns. For four-bit addition, fifteen plus one exercises overflow. For AND, inputs 1010 and 0101 exercise independent bit positions.\n\nA combinational ALU needs no clock. Its output responds to data and opcode changes. After synthesis, some logic may be shared and multiplexers select the result. Cell counts depend on optimization and mapping. Record the synthesis commands when comparing versions so the comparison is reproducible.\n\n## Try in the playground\n\nRead the port names and widths before running. Open the matching example, change one expression and rerun its testbench. Inspect the outputs and diagnostic messages.\n\n```verilog\nmodule top(input [3:0] a, b, input op, output [3:0] y);\n  assign y = op ? (a & b) : (a + b);\nendmodule\n```\n"
+      },
+      "exerciseIds": ["adder", "alu"]
+    },
+    {
+      "id": "storage",
+      "module": "sequential",
+      "title": {
+        "vi": "Latch, flip-flop và reset",
+        "en": "Latches, flip-flops and reset"
+      },
+      "body": {
+        "vi": "## Mục tiêu\n\nHiểu cách mạch lưu trạng thái. Latch nhạy mức và có thể truyền dữ liệu khi enable đang hoạt động. Flip-flop nhạy cạnh lấy mẫu dữ liệu tại một cạnh clock. Hai phần tử có hành vi thời gian khác nhau.\n\n## Mô tả flip-flop\n\nalways @(posedge clk) mô tả cập nhật ở cạnh lên. Dùng phép gán không chặn <= cho trạng thái tuần tự. Trong cùng một cạnh clock, các biểu thức bên phải đọc trạng thái cũ, rồi cập nhật được lên lịch.\n\nReset đồng bộ chỉ tác động khi có cạnh clock. Reset bất đồng bộ được thêm vào danh sách sự kiện và có thể tác động giữa hai cạnh. Testbench phải phù hợp loại reset, kiểm tra cả khi reset được bật lẫn khi được nhả.\n\n## Thử trong playground\n\nĐọc tên cổng và độ rộng trước khi chạy. Mở ví dụ tương ứng, sửa một biểu thức và chạy lại testbench. Quan sát cả đầu ra lẫn thông báo lỗi.\n\n```verilog\nmodule top(input clk, rst, d, output reg q);\n  always @(posedge clk)\n    if (rst) q <= 1'b0;\n    else q <= d;\nendmodule\n```\n",
+        "en": "## Goal\n\nUnderstand how circuits retain state. A level-sensitive latch can pass data while its enable is active. An edge-triggered flip-flop samples data at a clock edge. Their timing behavior differs.\n\n## Describe a flip-flop\n\nAn always @(posedge clk) block updates on rising edges. Use nonblocking assignments, written <=, for sequential state. Right-hand expressions observe old state at the edge and updates are scheduled afterward. This lets a pipeline behave as separate registers.\n\nA synchronous reset acts at a clock edge. An asynchronous reset appears in the event list and may act between edges. Match the testbench to the specified reset type. Check reset assertion, release and normal data capture, including changes between clock edges.\n\n## Try in the playground\n\nRead the port names and widths before running. Open the matching example, change one expression and rerun its testbench. Inspect the outputs and diagnostic messages.\n\n```verilog\nmodule top(input clk, rst, d, output reg q);\n  always @(posedge clk)\n    if (rst) q <= 1'b0;\n    else q <= d;\nendmodule\n```\n"
+      },
+      "exerciseIds": ["dff"]
+    },
+    {
+      "id": "counter",
+      "module": "sequential",
+      "title": {
+        "vi": "Register, enable và counter",
+        "en": "Registers, enables and counters"
+      },
+      "body": {
+        "vi": "## Mục tiêu\n\nXây bộ đếm có reset và enable. Thanh ghi n bit lưu một vector trạng thái. Mỗi cạnh clock, counter có thể tăng, giữ nguyên hoặc về 0 theo tín hiệu điều khiển.\n\n## Thứ tự ưu tiên\n\nNếu reset và enable cùng bật, đặc tả phải nêu tín hiệu nào thắng. Ví dụ dưới đây cho reset ưu tiên. Khi enable bằng 0, việc không gán trong khối tuần tự có nghĩa là giữ trạng thái. Điều này hợp lệ cho flip-flop.\n\nCounter 4 bit tăng từ 15 về 0 do cắt về bốn bit. Kiểm tra wraparound, reset giữa quá trình và nhiều chu kỳ disable. Dùng clock enable ở đầu vào trạng thái giúp giữ một miền clock rõ ràng. Việc tự tạo clock bằng logic tổ hợp cần phân tích timing riêng.\n\n## Thử trong playground\n\nĐọc tên cổng và độ rộng trước khi chạy. Mở ví dụ tương ứng, sửa một biểu thức và chạy lại testbench. Quan sát cả đầu ra lẫn thông báo lỗi.\n\n```verilog\nmodule top(input clk, rst, en, output reg [3:0] q);\n  always @(posedge clk)\n    if (rst) q <= 4'd0;\n    else if (en) q <= q + 1'b1;\nendmodule\n```\n",
+        "en": "## Goal\n\nBuild a counter with reset and enable. An n-bit register stores a state vector. At each clock edge, a counter may increment, hold or clear according to its controls.\n\n## Control priority\n\nWhen reset and enable are both active, the specification must say which wins. This example gives reset priority. Omitting an assignment in a sequential block when enable is low means holding the current state, which is valid flip-flop behavior.\n\nA four-bit counter wraps from fifteen to zero because its result is restricted to four bits. Test wraparound, reset during operation and multiple disabled cycles. A clock enable preserves a clear clock domain. Generating clocks through combinational logic introduces additional timing concerns.\n\n## Try in the playground\n\nRead the port names and widths before running. Open the matching example, change one expression and rerun its testbench. Inspect the outputs and diagnostic messages.\n\n```verilog\nmodule top(input clk, rst, en, output reg [3:0] q);\n  always @(posedge clk)\n    if (rst) q <= 4'd0;\n    else if (en) q <= q + 1'b1;\nendmodule\n```\n"
+      },
+      "exerciseIds": [
+        "register-enable",
+        "counter",
+        "reset-counter",
+        "clock-enable"
+      ]
+    },
+    {
+      "id": "fsm",
+      "module": "sequential",
+      "title": {
+        "vi": "FSM và phát hiện cạnh",
+        "en": "Finite state machines and edge detection"
+      },
+      "body": {
+        "vi": "## Mục tiêu\n\nMô tả hành vi phụ thuộc lịch sử bằng máy trạng thái. FSM gồm trạng thái hiện tại, quy tắc chuyển trạng thái và đầu ra. Moore phụ thuộc trạng thái, còn Mealy có thể phụ thuộc cả đầu vào hiện tại.\n\n## Một FSM rất nhỏ\n\nBộ phát hiện cạnh lên lưu giá trị đầu vào của chu kỳ trước. Nếu đầu vào hiện tại bằng 1 và giá trị trước bằng 0, đầu ra báo cạnh. Cần xác định rõ đầu ra là tổ hợp hay được đăng ký để viết testbench đúng thời điểm.\n\nVẽ trạng thái và các điều kiện chuyển trước khi code. Thử reset, tự lặp, từng đường chuyển và chuỗi tín hiệu liên tiếp. Default trong logic next-state giúp tránh latch. Một FSM đúng cần giữ được hành vi ở cả chuỗi dài, không chỉ một chuyển trạng thái.\n\n## Thử trong playground\n\nĐọc tên cổng và độ rộng trước khi chạy. Mở ví dụ tương ứng, sửa một biểu thức và chạy lại testbench. Quan sát cả đầu ra lẫn thông báo lỗi.\n\n```verilog\nmodule top(input clk, rst, signal_in, output pulse);\n  reg previous;\n  always @(posedge clk)\n    if (rst) previous <= 1'b0;\n    else previous <= signal_in;\n  assign pulse = signal_in & ~previous;\nendmodule\n```\n",
+        "en": "## Goal\n\nDescribe history-dependent behavior with a finite state machine. An FSM has current state, transition rules and outputs. Moore outputs depend on state. Mealy outputs may also depend on current inputs.\n\n## A tiny state machine\n\nA rising-edge detector remembers the previous sampled input. When the current input is one and the remembered value is zero, it reports an edge. Specify whether that output is combinational or registered so the testbench checks at the correct time.\n\nDraw states and transition conditions before coding. Test reset, self-loops, every transition and consecutive input sequences. Default assignments in next-state logic prevent unintended latches. Correctness must hold across long sequences as well as individual transitions.\n\n## Try in the playground\n\nRead the port names and widths before running. Open the matching example, change one expression and rerun its testbench. Inspect the outputs and diagnostic messages.\n\n```verilog\nmodule top(input clk, rst, signal_in, output pulse);\n  reg previous;\n  always @(posedge clk)\n    if (rst) previous <= 1'b0;\n    else previous <= signal_in;\n  assign pulse = signal_in & ~previous;\nendmodule\n```\n"
+      },
+      "exerciseIds": ["edge-detector"]
+    },
+    {
+      "id": "verilog-basics",
+      "module": "verilog",
+      "title": {
+        "vi": "Module, vector và toán tử",
+        "en": "Modules, vectors and operators"
+      },
+      "body": {
+        "vi": "## Mục tiêu\n\nĐọc một module qua giao diện cổng. input đi vào khối, output đi ra. Một vector [7:0] có tám bit, trong đó bit 7 là bit có chỉ số cao nhất. a[3:0] lấy bốn bit thấp, còn {a, b} nối hai vector.\n\n## Chọn toán tử đúng\n\n^a là reduction XOR, gom các bit thành một bit parity. a ^ b là XOR từng bit của hai toán hạng. Kết quả và độ rộng của hai cách dùng khác nhau.\n\nTrong Verilog cổ điển, reg chỉ kiểu biến có thể gán trong procedural block và không tự khẳng định phần cứng là thanh ghi. SystemVerilog thêm logic và always_comb/always_ff để diễn tả ý định rõ hơn. Khả năng hỗ trợ SystemVerilog phụ thuộc engine, nên dùng subset đã kiểm thử cho bài nhập môn.\n\n## Thử trong playground\n\nĐọc tên cổng và độ rộng trước khi chạy. Mở ví dụ tương ứng, sửa một biểu thức và chạy lại testbench. Quan sát cả đầu ra lẫn thông báo lỗi.\n\n```verilog\nmodule top(input [7:0] a, output parity);\n  assign parity = ^a;\nendmodule\n```\n",
+        "en": "## Goal\n\nRead a module through its port interface. Inputs enter the block and outputs leave it. A vector declared [7:0] contains eight bits. The slice a[3:0] selects four low bits, while {a, b} concatenates two vectors.\n\n## Choose the right operator\n\nThe expression ^a is a reduction XOR and combines all bits into one parity bit. The expression a ^ b performs bitwise XOR between two operands. These forms have different output widths and purposes.\n\nIn classic Verilog, reg identifies a procedural variable and does not by itself guarantee a physical register. SystemVerilog adds logic and always_comb/always_ff for clearer intent. Engine support varies, so introductory examples use a tested subset. Verify widths when connecting module instances.\n\n## Try in the playground\n\nRead the port names and widths before running. Open the matching example, change one expression and rerun its testbench. Inspect the outputs and diagnostic messages.\n\n```verilog\nmodule top(input [7:0] a, output parity);\n  assign parity = ^a;\nendmodule\n```\n"
+      },
+      "exerciseIds": ["vector-slice", "parity"]
+    },
+    {
+      "id": "testbench",
+      "module": "verilog",
+      "title": {
+        "vi": "Testbench tự kiểm tra và VCD",
+        "en": "Self-checking testbenches and VCD"
+      },
+      "body": {
+        "vi": "## Mục tiêu\n\nTạo đầu vào, quan sát đầu ra và so sánh với kết quả mong đợi. Testbench bao quanh thiết kế cần kiểm thử, thường gọi là DUT. Các lệnh delay, display và finish phục vụ mô phỏng và thường không tổng hợp thành phần cứng.\n\n## Đúng thời điểm\n\nSau khi đổi đầu vào, cho mạch thời gian cập nhật trước khi so sánh. Với logic tuần tự, kiểm tra sau khi nonblocking assignment hoàn tất. Dùng !== để phát hiện cả X hoặc Z ngoài mong đợi.\n\nVCD lưu thay đổi giá trị theo thời gian. $dumpfile chọn tên tệp và $dumpvars chọn phạm vi tín hiệu. Waveform giúp tìm thời điểm sai, còn kiểm tra tự động giúp chạy lại nhiều trường hợp. Một test pass chỉ chứng minh những trường hợp đã kiểm tra, vì vậy cần thêm giá trị biên và chuỗi reset.\n\n## Thử trong playground\n\nĐọc tên cổng và độ rộng trước khi chạy. Mở ví dụ tương ứng, sửa một biểu thức và chạy lại testbench. Quan sát cả đầu ra lẫn thông báo lỗi.\n\n```verilog\nmodule top(input a, b, output y);\n  assign y = a & b;\nendmodule\n\n// Testbench is entered in the separate testbench editor.\n// Use $dumpfile(\"wave.vcd\") and $dumpvars(0, tb).\n```\n",
+        "en": "## Goal\n\nDrive inputs, observe outputs and compare them against expectations. A testbench surrounds the design under test, commonly called the DUT. Delays, display statements and finish commands serve simulation and usually do not synthesize into hardware.\n\n## Check at the right time\n\nAllow outputs to update after changing inputs. For sequential logic, check after nonblocking assignments have completed. Use !== when unexpected X or Z values should fail the comparison.\n\nVCD records value changes over simulation time. $dumpfile chooses a filename and $dumpvars selects signal scope. Waveforms help locate a failure, while automatic checks make repeated tests practical. A passing test only establishes the cases exercised. Include boundaries, reset sequences and meaningful changes between inputs.\n\n## Try in the playground\n\nRead the port names and widths before running. Open the matching example, change one expression and rerun its testbench. Inspect the outputs and diagnostic messages.\n\n```verilog\nmodule top(input a, b, output y);\n  assign y = a & b;\nendmodule\n\n// Testbench is entered in the separate testbench editor.\n// Use $dumpfile(\"wave.vcd\") and $dumpvars(0, tb).\n```\n"
+      },
+      "exerciseIds": ["and-gate", "parity"]
+    },
+    {
+      "id": "setup-hold",
+      "module": "timing",
+      "title": {
+        "vi": "Setup, hold và critical path",
+        "en": "Setup, hold and critical paths"
+      },
+      "body": {
+        "vi": "## Mục tiêu\n\nHiểu dữ liệu phải ổn định quanh cạnh lấy mẫu. Setup yêu cầu dữ liệu đến đủ sớm trước cạnh clock. Hold yêu cầu dữ liệu tiếp tục ổn định đủ lâu sau cạnh. Vi phạm có thể gây hành vi không xác định ở phần cứng.\n\n## Một đường register-to-register\n\nDữ liệu đi từ clock-to-Q của thanh ghi phát, qua logic và dây nối, tới chân D của thanh ghi nhận. Kiểm tra setup so sánh thời gian đến với thời gian yêu cầu. Slack âm báo vi phạm trong điều kiện phân tích đó.\n\nRTL simulation lý tưởng thường không mô hình hóa trễ cell hoặc metastability. Một waveform đúng chức năng chưa chứng minh timing đạt. Pipeline chia logic giữa nhiều tầng để giảm đường dài, đổi lại tăng latency. Đo timing thực cần library, parasitic và ràng buộc clock phù hợp.\n\n## Thử trong playground\n\nĐọc tên cổng và độ rộng trước khi chạy. Mở ví dụ tương ứng, sửa một biểu thức và chạy lại testbench. Quan sát cả đầu ra lẫn thông báo lỗi.\n\n```verilog\nmodule top(input clk, input [3:0] a, b, output reg [4:0] q);\n  always @(posedge clk) q <= {1'b0, a} + {1'b0, b};\nendmodule\n```\n",
+        "en": "## Goal\n\nUnderstand why data must remain stable around a sampling edge. Setup requires data to arrive sufficiently before the clock edge. Hold requires it to remain stable afterward. Violations may cause unreliable hardware behavior.\n\n## A register-to-register path\n\nData travels through the launching register's clock-to-Q delay, combinational cells and interconnect before reaching the receiving register. Setup analysis compares arrival time with required time. Negative slack indicates a violation under the analyzed conditions.\n\nIdeal RTL simulation usually omits cell delays and metastability. A functionally correct waveform cannot establish timing closure. Pipelining divides logic across stages, reducing long paths at the cost of latency. Physical timing analysis needs suitable libraries, parasitics and clock constraints.\n\n## Try in the playground\n\nRead the port names and widths before running. Open the matching example, change one expression and rerun its testbench. Inspect the outputs and diagnostic messages.\n\n```verilog\nmodule top(input clk, input [3:0] a, b, output reg [4:0] q);\n  always @(posedge clk) q <= {1'b0, a} + {1'b0, b};\nendmodule\n```\n"
+      },
+      "exerciseIds": ["pipeline"]
+    },
+    {
+      "id": "clock-domains",
+      "module": "timing",
+      "title": {
+        "vi": "Clock domain và đồng bộ tín hiệu",
+        "en": "Clock domains and synchronization"
+      },
+      "body": {
+        "vi": "## Mục tiêu\n\nNhận ra tín hiệu đến từ clock khác hoặc từ ngoài chip. Nó có thể thay đổi gần cạnh lấy mẫu của miền nhận. Flip-flop đầu tiên có nguy cơ metastability, một trạng thái analog cần thời gian để ổn định.\n\n## Đồng bộ một bit\n\nChuỗi hai flip-flop trong miền nhận thường dùng cho tín hiệu mức một bit thay đổi đủ chậm. Tầng thứ hai cho thêm thời gian phân giải và giảm xác suất lỗi. Nó không loại bỏ hoàn toàn rủi ro và không đảm bảo bắt được mọi xung ngắn.\n\nBus nhiều bit cần giao thức phù hợp như handshake hoặc asynchronous FIFO. Đồng bộ riêng từng bit có thể tạo từ dữ liệu không nhất quán. Mô phỏng RTL chỉ kiểm tra chuỗi cập nhật, còn đánh giá CDC và metastability cần phương pháp riêng.\n\n## Thử trong playground\n\nĐọc tên cổng và độ rộng trước khi chạy. Mở ví dụ tương ứng, sửa một biểu thức và chạy lại testbench. Quan sát cả đầu ra lẫn thông báo lỗi.\n\n```verilog\nmodule top(input clk, async_in, output reg sync_out);\n  reg first;\n  always @(posedge clk) begin\n    first <= async_in;\n    sync_out <= first;\n  end\nendmodule\n```\n",
+        "en": "## Goal\n\nRecognize signals arriving from another clock or from outside the chip. Such a signal may change near the receiving edge. The first sampling flip-flop can become metastable, an analog condition that takes time to resolve.\n\n## Synchronizing one bit\n\nTwo receiving-clock flip-flops are commonly used for a sufficiently slow single-bit level. The second stage allows additional resolution time and reduces failure probability. It cannot remove all risk or guarantee capture of every short pulse.\n\nMulti-bit transfers require a suitable protocol, such as a handshake or asynchronous FIFO. Independently synchronizing every bit can produce an inconsistent word. RTL simulation checks update sequences, while CDC correctness and metastability reliability require separate analysis.\n\n## Try in the playground\n\nRead the port names and widths before running. Open the matching example, change one expression and rerun its testbench. Inspect the outputs and diagnostic messages.\n\n```verilog\nmodule top(input clk, async_in, output reg sync_out);\n  reg first;\n  always @(posedge clk) begin\n    first <= async_in;\n    sync_out <= first;\n  end\nendmodule\n```\n"
+      },
+      "exerciseIds": ["synchronizer"]
+    },
+    {
+      "id": "rtl-netlist",
+      "module": "synthesis",
+      "title": {
+        "vi": "Từ RTL đến netlist",
+        "en": "From RTL to a netlist"
+      },
+      "body": {
+        "vi": "## Mục tiêu\n\nTheo dõi RTL được chuyển thành các cell và dây nối. Synthesis đọc cú pháp, xây biểu diễn trung gian, chuyển process thành logic rồi tối ưu. Với Yosys, write_json xuất netlist có thể dùng để vẽ sơ đồ.\n\n## Đọc kết quả\n\nTên cell cho biết loại chức năng, ports cho biết kết nối và bit IDs nối các tín hiệu. Logic không ảnh hưởng đầu ra có thể bị loại bỏ. Hằng số có thể làm cả nhánh biến mất. Vì vậy số dòng RTL không đo được diện tích.\n\nGeneric synthesis tạo cell tổng quát. Technology mapping chọn cell từ thư viện đích. Muốn so sánh hai thiết kế, giữ cùng top module, lệnh tổng hợp và mục tiêu. Kiểm tra lại chức năng sau thay đổi trước khi diễn giải chênh lệch số cell.\n\n## Thử trong playground\n\nĐọc tên cổng và độ rộng trước khi chạy. Mở ví dụ tương ứng, sửa một biểu thức và chạy lại testbench. Quan sát cả đầu ra lẫn thông báo lỗi.\n\n```verilog\nmodule top(input a, b, output y);\n  assign y = ~(a & b);\nendmodule\n```\n",
+        "en": "## Goal\n\nFollow RTL as it becomes cells and connections. Synthesis parses the source, builds an intermediate representation, lowers processes into logic and applies optimizations. Yosys write_json exports a netlist suitable for schematic rendering.\n\n## Read the result\n\nCell types describe functions, ports describe connections and bit identifiers link signals. Logic that cannot affect an observable output may disappear. Constants can eliminate whole branches. RTL line count therefore does not measure area.\n\nGeneric synthesis produces technology-independent cells. Technology mapping chooses cells from a target library. Keep the same top module, synthesis commands and target when comparing designs. Recheck functionality after an edit before interpreting differences in cell counts. Inspect warnings as well as the final diagram.\n\n## Try in the playground\n\nRead the port names and widths before running. Open the matching example, change one expression and rerun its testbench. Inspect the outputs and diagnostic messages.\n\n```verilog\nmodule top(input a, b, output y);\n  assign y = ~(a & b);\nendmodule\n```\n"
+      },
+      "exerciseIds": ["demorgan"]
+    },
+    {
+      "id": "ppa",
+      "module": "synthesis",
+      "title": {
+        "vi": "Cell library và đánh đổi PPA",
+        "en": "Cell libraries and PPA tradeoffs"
+      },
+      "body": {
+        "vi": "## Mục tiêu\n\nHiểu power, performance và area cần dữ liệu gì. Thư viện Liberty mô tả đặc tính timing, điện dung và thông tin công suất của các cell trong những điều kiện xác định. LEF mô tả hình học trừu tượng phục vụ bố trí và nối dây.\n\n## So sánh có điều kiện\n\nMột cell lớn hơn có thể kéo tải nhanh hơn nhưng tăng diện tích và điện dung. Tối ưu timing có thể chèn buffer hoặc nhân bản logic. Công suất động phụ thuộc hoạt động chuyển mạch, tải và điện áp, vì vậy số cell đơn thuần không đủ để suy ra power.\n\nThống kê trong playground hữu ích để học cấu trúc logic. Một báo cáo PPA thực cần công nghệ, corner, constraints và giai đoạn flow. Ghi các điều kiện này cùng kết quả để người khác có thể lặp lại phép đo.\n\n## Thử trong playground\n\nĐọc tên cổng và độ rộng trước khi chạy. Mở ví dụ tương ứng, sửa một biểu thức và chạy lại testbench. Quan sát cả đầu ra lẫn thông báo lỗi.\n\n```verilog\nmodule top(input [3:0] a, output y);\n  assign y = |a;\nendmodule\n```\n",
+        "en": "## Goal\n\nUnderstand the inputs needed for power, performance and area analysis. Liberty libraries describe cell timing, capacitance and power characteristics under specified conditions. LEF provides abstract geometry for placement and routing.\n\n## Conditional comparisons\n\nA larger cell may drive a load faster while increasing area and input capacitance. Timing optimization can insert buffers or duplicate logic. Dynamic power depends on switching activity, load and voltage, so cell count alone cannot determine power consumption.\n\nPlayground statistics help explain logic structure. A physical PPA report needs a process, operating corner, constraints and a known flow stage. Record those conditions with the result so another learner can reproduce the measurement. Compare equivalent functionality and identical analysis settings.\n\n## Try in the playground\n\nRead the port names and widths before running. Open the matching example, change one expression and rerun its testbench. Inspect the outputs and diagnostic messages.\n\n```verilog\nmodule top(input [3:0] a, output y);\n  assign y = |a;\nendmodule\n```\n"
+      },
+      "exerciseIds": ["priority"]
+    },
+    {
+      "id": "physical-flow",
+      "module": "physical",
+      "title": {
+        "vi": "Floorplan, placement, CTS và routing",
+        "en": "Floorplan, placement, CTS and routing"
+      },
+      "body": {
+        "vi": "## Mục tiêu\n\nTheo dõi netlist đi tới layout. Floorplan xác định vùng core, macro, chân vào ra và cấu trúc nguồn. Placement đặt standard cell trong vùng hợp lệ. CTS xây cây clock để phân phối clock tới các phần tử tuần tự. Routing kết nối các chân bằng lớp kim loại và via.\n\n## Flow có phản hồi\n\nSau placement hoặc routing, trễ dây thay đổi kết quả timing. Congestion có thể buộc flow đổi bố trí hoặc tăng diện tích. Các bước tối ưu thường được lặp lại. OpenROAD và OpenLane giúp tự động hóa nhưng người thiết kế vẫn cần đọc log và ràng buộc.\n\nVí dụ RTL dưới đây là đầu vào nhỏ cho một flow bên ngoài. Trình duyệt thực hiện mô phỏng và synthesis. Để tạo GDSII, chạy flow có PDK và cấu hình tái lập, rồi lưu báo cáo từng bước.\n\n## Thử trong playground\n\nĐọc tên cổng và độ rộng trước khi chạy. Mở ví dụ tương ứng, sửa một biểu thức và chạy lại testbench. Quan sát cả đầu ra lẫn thông báo lỗi.\n\n```verilog\nmodule top(input clk, rst, output reg [3:0] q);\n  always @(posedge clk)\n    if (rst) q <= 0;\n    else q <= q + 1'b1;\nendmodule\n```\n",
+        "en": "## Goal\n\nTrace a netlist toward layout. Floorplanning defines core dimensions, macros, I/O placement and power structure. Placement locates standard cells in legal sites. Clock tree synthesis distributes clocks to sequential elements. Routing connects pins through metal layers and vias.\n\n## A feedback process\n\nPlacement and routing change wire delays and therefore timing. Congestion may require a revised placement or larger area. Optimization steps are often repeated. OpenROAD and OpenLane automate the flow while designers still inspect constraints, logs and reports.\n\nThe small RTL example can be an input to an external physical flow. The browser runs simulation and synthesis. Producing GDSII requires a PDK and reproducible flow configuration. Save intermediate reports so changes can be traced to a specific stage.\n\n## Try in the playground\n\nRead the port names and widths before running. Open the matching example, change one expression and rerun its testbench. Inspect the outputs and diagnostic messages.\n\n```verilog\nmodule top(input clk, rst, output reg [3:0] q);\n  always @(posedge clk)\n    if (rst) q <= 0;\n    else q <= q + 1'b1;\nendmodule\n```\n"
+      },
+      "exerciseIds": ["clock-enable"]
+    },
+    {
+      "id": "verification-signoff",
+      "module": "physical",
+      "title": {
+        "vi": "DRC, LVS và portfolio tái lập",
+        "en": "DRC, LVS and reproducible portfolios"
+      },
+      "body": {
+        "vi": "## Mục tiêu\n\nPhân biệt kiểm tra hình học và kiểm tra kết nối. DRC kiểm tra layout theo các quy tắc công nghệ, ví dụ khoảng cách và độ rộng. LVS so sánh mạch trích xuất từ layout với netlist tham chiếu. Timing analysis kiểm tra các yêu cầu thời gian trong những corner đã chọn.\n\n## Lưu bằng chứng\n\nMột dự án học tập nên ghi rõ commit RTL, phiên bản tool, PDK, clock mục tiêu và lệnh chạy. Lưu báo cáo, ảnh layout và các giới hạn đã biết. Khi thay đổi utilization hoặc clock period, so sánh cùng một tập chỉ số và giải thích nguyên nhân.\n\nLộ trình Physical Design có thể bắt đầu bằng một counter nhỏ, rồi tăng lên ALU, UART hoặc CPU. Hoàn thành một flow tái lập và giải thích log giúp xây nền tảng cho timing closure sâu hơn.\n\n## Thử trong playground\n\nĐọc tên cổng và độ rộng trước khi chạy. Mở ví dụ tương ứng, sửa một biểu thức và chạy lại testbench. Quan sát cả đầu ra lẫn thông báo lỗi.\n\n```verilog\nmodule top(input clk, rst, en, output reg [3:0] q);\n  always @(posedge clk)\n    if (rst) q <= 0;\n    else if (en) q <= q + 1'b1;\nendmodule\n```\n",
+        "en": "## Goal\n\nDistinguish geometry checks from connectivity checks. Design rule checking evaluates layout against process rules, including widths and spacing. Layout versus schematic compares the extracted circuit with a reference netlist. Timing analysis checks temporal requirements at selected corners.\n\n## Preserve evidence\n\nA learning project should identify its RTL commit, tool versions, PDK, target clock and execution command. Save reports, layout images and known limitations. When changing utilization or clock period, compare the same metrics and explain the causes.\n\nA Physical Design learning path can begin with a small counter and grow toward an ALU, UART or CPU. Completing a reproducible flow and explaining its logs builds a foundation for deeper timing closure. A clean check applies to its configured rules and analysis scope.\n\n## Try in the playground\n\nRead the port names and widths before running. Open the matching example, change one expression and rerun its testbench. Inspect the outputs and diagnostic messages.\n\n```verilog\nmodule top(input clk, rst, en, output reg [3:0] q);\n  always @(posedge clk)\n    if (rst) q <= 0;\n    else if (en) q <= q + 1'b1;\nendmodule\n```\n"
+      },
+      "exerciseIds": ["reset-counter"]
+    }
+  ]
+}
