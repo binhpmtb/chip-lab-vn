@@ -114,7 +114,7 @@ const resources = [
   ],
 ];
 export default function Lab() {
-  const [dark, setDark] = useState(false);
+  const [dark, setDark] = useState(true);
   const [done, setDone] = useState<number[]>([]);
   const [mobilePractice, setMobilePractice] = useState(false);
   const openLesson = (index: number) => { setLessonIndex(index); setView("learn"); setMobilePractice(false); setTimeout(() => document.querySelector(".lab-section")?.scrollIntoView({ behavior: "auto" }), 0); };
@@ -156,7 +156,7 @@ export default function Lab() {
   }, [view, editorVisible]);
   useEffect(() => {
     try {
-      setDark(localStorage.getItem("chiplab-theme") === "dark");
+      setDark(localStorage.getItem("chiplab-theme") !== "light");
       const savedLessons = JSON.parse(localStorage.getItem("chiplab-lessons") || "[]");
       if (Array.isArray(savedLessons)) setDone(savedLessons.filter((x) => Number.isInteger(x) && x >= 0 && x < curriculum.lessons.length));
       setProgress(readProgress(localStorage.getItem("chiplab-progress")));
