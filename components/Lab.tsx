@@ -13,8 +13,6 @@ import {
   Layers,
   Check,
   ChevronRight,
-  Sun,
-  Moon,
   Globe,
   Terminal,
   RotateCcw,
@@ -119,7 +117,6 @@ export default function Lab() {
   const [lang, setLang] = useState<Lang>("vi");
   const [editorVisible, setEditorVisible] = useState(false);
   const editorContainer = useRef<HTMLDivElement>(null);
-  const [dark, setDark] = useState(true);
   const [view, setView] = useState("learn");
   const [lessonIndex, setLessonIndex] = useState(0);
   const [design, setDesign] = useState(initial.design);
@@ -156,7 +153,6 @@ export default function Lab() {
   useEffect(() => {
     try {
       setProgress(readProgress(localStorage.getItem("chiplab-progress")));
-      setDark(localStorage.getItem("chiplab-theme") !== "light");
       const saved = localStorage.getItem("chiplab-design");
       if (saved !== null) setDesign(saved);
       const savedTb = localStorage.getItem("chiplab-tb");
@@ -179,13 +175,8 @@ export default function Lab() {
   }, []);
   useEffect(() => {
     document.documentElement.lang = lang;
-    document.documentElement.dataset.theme = dark ? "dark" : "light";
-    if (hydrated) {
-      try {
-        localStorage.setItem("chiplab-theme", dark ? "dark" : "light");
-      } catch {}
-    }
-  }, [dark, lang, hydrated]);
+    document.documentElement.dataset.theme = "light";
+  }, [lang, hydrated]);
   useEffect(() => {
     if (hydrated) {
       try {
@@ -437,24 +428,20 @@ export default function Lab() {
               <Globe size={16} />
               {lang.toUpperCase()}
             </button>
-            <button
-              className="icon-button"
-              onClick={() => setDark(!dark)}
-              aria-label={t("Đổi giao diện sáng tối", "Toggle color theme")}
-            >
-              {dark ? <Sun size={18} /> : <Moon size={18} />}
-            </button>
           </div>
         </header>
         <main id="main">
           {view === "learn" && (
             <>
-              <section className="hero">
-                <div>
+              <section className="hero editorial-section">
+                <div className="editorial-label hero-label">
+                  <span className="section-index">01 /</span>
                   <div className="eyebrow">
                     <span />{" "}
                     {t("TỪ LOGIC ĐẾN SILICON", "FROM LOGIC TO SILICON")}
                   </div>
+                </div>
+                <div className="hero-copy">
                   <h1>
                     {t("Bắt đầu từ một bit.", "Start with one bit.")}
                     <br />
@@ -462,568 +449,582 @@ export default function Lab() {
                       {t("Thiết kế cả tương lai.", "Design what comes next.")}
                     </span>
                   </h1>
-                  <p>
-                    {t(
-                      "Học thiết kế vi mạch qua từng mạch nhỏ. Viết RTL, chạy mô phỏng và nhìn thấy ý tưởng của bạn hoạt động.",
-                      "Learn digital design one circuit at a time. Write RTL, run simulations and see your ideas come alive.",
-                    )}
-                  </p>
-                  <div className="hero-meta">
-                    <span>7 {t("module", "modules")}</span>
-                    <span>
-                      {curriculum.lessons.length} {t("bài học", "lessons")}
-                    </span>
-                    <span>
-                      {exercises.length} {t("bài thực hành", "exercises")}
-                    </span>
+                  <div className="hero-details">
+                    <p>
+                      {t(
+                        "Học thiết kế vi mạch qua từng mạch nhỏ. Viết RTL, chạy mô phỏng và nhìn thấy ý tưởng của bạn hoạt động.",
+                        "Learn digital design one circuit at a time. Write RTL, run simulations and see your ideas come alive.",
+                      )}
+                    </p>
+                    <div className="hero-meta">
+                      <span>7 {t("module", "modules")}</span>
+                      <span>
+                        {curriculum.lessons.length} {t("bài học", "lessons")}
+                      </span>
+                      <span>
+                        {exercises.length} {t("bài thực hành", "exercises")}
+                      </span>
+                    </div>
                   </div>
-                </div>
-                <div className="chip-art" aria-hidden="true">
-                  <div className="chip-grid" />
-                  <div className="chip-package">
-                    <Cpu size={74} strokeWidth={1} />
-                    <span>RTL → GDSII</span>
-                  </div>
-                  <span className="chip-tag tag-one">input → logic</span>
-                  <span className="chip-tag tag-two">
-                    always @ (posedge clk)
-                  </span>
                 </div>
               </section>
-              <div className="section-heading">
-                <h2>{t("Lộ trình của bạn", "Your learning path")}</h2>
-                <span>
-                  {t(
-                    "Học theo thứ tự hoặc chọn một chủ đề",
-                    "Follow the path or explore a topic",
-                  )}
-                </span>
-              </div>
-              <div className="module-row">
-                {curriculum.modules.map((m, i) => (
-                  <button
-                    key={m.id}
-                    className={
-                      lesson.module === m.id
-                        ? "module-card selected"
-                        : "module-card"
-                    }
-                    onClick={() => {
-                      const index = curriculum.lessons.findIndex(
-                        (l) => l.module === m.id,
-                      );
-                      if (index >= 0) setLessonIndex(index);
-                    }}
-                  >
-                    <span className="module-number">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <strong>{m.title[lang]}</strong>
-                    <span>
-                      {
-                        curriculum.lessons.filter((l) => l.module === m.id)
-                          .length
-                      }{" "}
-                      {t("bài học", "lessons")}
-                    </span>
-                  </button>
-                ))}
-              </div>
+              <section className="editorial-section curriculum-section">
+                <div className="editorial-label">
+                  <span className="section-index">02 /</span>
+                  <h2>{t("Lộ trình của bạn", "Your learning path")}</h2>
+                  <span className="section-description">
+                    {t(
+                      "Học theo thứ tự hoặc chọn một chủ đề",
+                      "Follow the path or explore a topic",
+                    )}
+                  </span>
+                </div>
+                <div className="module-row">
+                  {curriculum.modules.map((m, i) => (
+                    <button
+                      key={m.id}
+                      className={
+                        lesson.module === m.id
+                          ? "module-card selected"
+                          : "module-card"
+                      }
+                      onClick={() => {
+                        const index = curriculum.lessons.findIndex(
+                          (l) => l.module === m.id,
+                        );
+                        if (index >= 0) setLessonIndex(index);
+                      }}
+                    >
+                      <span className="module-number">
+                        {String(i + 1).padStart(2, "0")} /
+                      </span>
+                      <strong>{m.title[lang]}</strong>
+                      <span>
+                        {
+                          curriculum.lessons.filter((l) => l.module === m.id)
+                            .length
+                        }{" "}
+                        {t("bài học", "lessons")}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </section>
             </>
           )}
           {(view === "learn" || view === "lab" || view === "exercises") && (
             <>
-              <div className="section-heading lab-heading">
-                <h2>
-                  {view === "exercises"
-                    ? t("Thử sức với RTL", "Put your RTL to the test")
-                    : view === "lab"
-                      ? "Playground"
-                      : t("Học và thực hành", "Learn by doing")}
-                </h2>
-                <span>
-                  <span className="status-dot" /> Icarus Verilog · Yosys WASM
-                </span>
-              </div>
-              <div className="lab-grid">
-                <section className="lesson-panel panel">
-                  {view === "exercises" ? (
-                    <>
-                      <label className="field-label" htmlFor="exercise">
-                        {t("Chọn bài tập", "Choose an exercise")}
-                      </label>
-                      <select
-                        id="exercise"
-                        value={exerciseId}
-                        onChange={(e) => loadExercise(e.target.value)}
-                        disabled={busy}
-                      >
-                        {exercises.map((e) => (
-                          <option key={e.id} value={e.id}>
-                            {progress.includes(e.id) ? "✓ " : ""}
-                            {e.title[lang]}
-                          </option>
-                        ))}
-                      </select>
-                      <h2>{exercise.title[lang]}</h2>
-                      <Markdown>{exercise.prompt[lang]}</Markdown>
-                      <div className="hint-box">
+              <section className="editorial-section lab-section">
+                <div className="editorial-label lab-heading">
+                  <span className="section-index">
+                    {view === "learn" ? "03 /" : "01 /"}
+                  </span>
+                  <h2>
+                    {view === "exercises"
+                      ? t("Thử sức với RTL", "Put your RTL to the test")
+                      : view === "lab"
+                        ? "Playground"
+                        : t("Học và thực hành", "Learn by doing")}
+                  </h2>
+                  <span className="section-description">
+                    <span className="status-dot" /> Icarus Verilog · Yosys WASM
+                  </span>
+                </div>
+                <div className="lab-grid">
+                  <section className="lesson-panel panel">
+                    {view === "exercises" ? (
+                      <>
+                        <label className="field-label" htmlFor="exercise">
+                          {t("Chọn bài tập", "Choose an exercise")}
+                        </label>
+                        <select
+                          id="exercise"
+                          value={exerciseId}
+                          onChange={(e) => loadExercise(e.target.value)}
+                          disabled={busy}
+                        >
+                          {exercises.map((e) => (
+                            <option key={e.id} value={e.id}>
+                              {progress.includes(e.id) ? "✓ " : ""}
+                              {e.title[lang]}
+                            </option>
+                          ))}
+                        </select>
+                        <h2>{exercise.title[lang]}</h2>
+                        <Markdown>{exercise.prompt[lang]}</Markdown>
+                        <div className="hint-box">
+                          <button
+                            className="text-button"
+                            onClick={() =>
+                              setHint(
+                                Math.min(hint + 1, exercise.hints[lang].length),
+                              )
+                            }
+                          >
+                            {t("Mở gợi ý", "Reveal hint")} ({hint}/
+                            {exercise.hints[lang].length})
+                          </button>
+                          {exercise.hints[lang].slice(0, hint).map((h) => (
+                            <p key={h}>{h}</p>
+                          ))}
+                        </div>
                         <button
-                          className="text-button"
+                          className="primary-button full"
+                          disabled={busy}
+                          onClick={() => run("grade")}
+                        >
+                          <Check size={16} />
+                          {t("Nộp bài & kiểm tra", "Submit & check")}
+                        </button>
+                        <p className="fineprint">
+                          {t(
+                            "Testbench được ẩn khỏi trình soạn thảo. Đây là chấm bài tự học trên thiết bị, không dùng để chứng nhận.",
+                            "The testbench is hidden from the editor. Local grading supports self-study, not certification.",
+                          )}
+                        </p>
+                      </>
+                    ) : view === "learn" ? (
+                      <>
+                        <label className="field-label" htmlFor="lesson">
+                          {t("Bài học", "Lesson")}
+                        </label>
+                        <select
+                          id="lesson"
+                          value={lessonIndex}
+                          onChange={(e) =>
+                            setLessonIndex(Number(e.target.value))
+                          }
+                        >
+                          {curriculum.lessons.map((l, i) => (
+                            <option key={l.id} value={i}>
+                              {l.title[lang]}
+                            </option>
+                          ))}
+                        </select>
+                        <article className="lesson-content">
+                          <h2>{lesson.title[lang]}</h2>
+                          <Markdown>{lesson.body[lang]}</Markdown>
+                        </article>
+                        <button
+                          className="secondary-button full"
+                          disabled={busy}
+                          onClick={() => {
+                            const exampleExercise = exercises.find(
+                              (e) => e.id === lesson.exerciseIds[0],
+                            );
+                            if (exampleExercise) {
+                              setDesign(exampleExercise.solution);
+                              setTb(exampleExercise.testbench);
+                              setEditorTab("design");
+                              setVcd("");
+                              setNetlist(null);
+                              setError("");
+                            }
+                          }}
+                        >
+                          {t("Mở ví dụ chạy được", "Load a working example")}
+                        </button>
+                        <button
+                          className="primary-button full"
+                          disabled={busy}
                           onClick={() =>
-                            setHint(
-                              Math.min(hint + 1, exercise.hints[lang].length),
+                            loadExercise(
+                              lesson.exerciseIds[0] || exercises[0].id,
                             )
                           }
                         >
-                          {t("Mở gợi ý", "Reveal hint")} ({hint}/
-                          {exercise.hints[lang].length})
+                          {t("Thực hành chủ đề này", "Practice this topic")}
+                          <ChevronRight size={16} />
                         </button>
-                        {exercise.hints[lang].slice(0, hint).map((h) => (
-                          <p key={h}>{h}</p>
-                        ))}
-                      </div>
-                      <button
-                        className="primary-button full"
-                        disabled={busy}
-                        onClick={() => run("grade")}
-                      >
-                        <Check size={16} />
-                        {t("Nộp bài & kiểm tra", "Submit & check")}
-                      </button>
-                      <p className="fineprint">
-                        {t(
-                          "Testbench được ẩn khỏi trình soạn thảo. Đây là chấm bài tự học trên thiết bị, không dùng để chứng nhận.",
-                          "The testbench is hidden from the editor. Local grading supports self-study, not certification.",
-                        )}
-                      </p>
-                    </>
-                  ) : view === "learn" ? (
-                    <>
-                      <label className="field-label" htmlFor="lesson">
-                        {t("Bài học", "Lesson")}
-                      </label>
-                      <select
-                        id="lesson"
-                        value={lessonIndex}
-                        onChange={(e) => setLessonIndex(Number(e.target.value))}
-                      >
-                        {curriculum.lessons.map((l, i) => (
-                          <option key={l.id} value={i}>
-                            {l.title[lang]}
-                          </option>
-                        ))}
-                      </select>
-                      <article className="lesson-content">
-                        <h2>{lesson.title[lang]}</h2>
-                        <Markdown>{lesson.body[lang]}</Markdown>
-                      </article>
-                      <button
-                        className="secondary-button full"
-                        disabled={busy}
-                        onClick={() => {
-                          const exampleExercise = exercises.find(
-                            (e) => e.id === lesson.exerciseIds[0],
-                          );
-                          if (exampleExercise) {
-                            setDesign(exampleExercise.solution);
-                            setTb(exampleExercise.testbench);
-                            setEditorTab("design");
-                            setVcd("");
-                            setNetlist(null);
-                            setError("");
-                          }
-                        }}
-                      >
-                        {t("Mở ví dụ chạy được", "Load a working example")}
-                      </button>
-                      <button
-                        className="primary-button full"
-                        disabled={busy}
-                        onClick={() =>
-                          loadExercise(lesson.exerciseIds[0] || exercises[0].id)
-                        }
-                      >
-                        {t("Thực hành chủ đề này", "Practice this topic")}
-                        <ChevronRight size={16} />
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <span className="eyebrow">WORKBENCH</span>
-                      <h2>
-                        {t(
-                          "Ý tưởng thành mạch.",
-                          "Turn an idea into a circuit.",
-                        )}
-                      </h2>
-                      <p>
-                        {t(
-                          'Sửa thiết kế và testbench, sau đó chạy mô phỏng. Dùng $dumpfile("dump.vcd") và $dumpvars để tạo waveform.',
-                          'Edit the design and testbench, then simulate. Use $dumpfile("dump.vcd") and $dumpvars to capture waveforms.',
-                        )}
-                      </p>
-                      <label className="field-label" htmlFor="example">
-                        {t("Bắt đầu từ mạch mẫu", "Start from an example")}
-                      </label>
-                      <select
-                        id="example"
-                        defaultValue=""
-                        disabled={busy}
-                        onChange={(e) => {
-                          const item = examples.find(
-                            (x) => x.id === e.target.value,
-                          );
-                          if (item) {
-                            setDesign(item.design);
-                            setTb(item.testbench);
-                          }
-                        }}
-                      >
-                        <option value="" disabled>
-                          {t("Chọn mạch mẫu", "Choose an example")}
-                        </option>
-                        {examples.map((e) => (
-                          <option key={e.id} value={e.id}>
-                            {e.title[lang]}
-                          </option>
-                        ))}
-                      </select>
-                      <div className="hint-box">
-                        <h3>{t("Đọc kết quả", "Read the results")}</h3>
+                      </>
+                    ) : (
+                      <>
+                        <span className="eyebrow">WORKBENCH</span>
+                        <h2>
+                          {t(
+                            "Ý tưởng thành mạch.",
+                            "Turn an idea into a circuit.",
+                          )}
+                        </h2>
                         <p>
                           {t(
-                            "Waveform biểu diễn tín hiệu theo thời gian. Synthesis chuyển RTL thành mạng cell logic. Số cell là kết quả tổng hợp tổng quát, chưa phải diện tích silicon.",
-                            "Waveforms show signals over time. Synthesis transforms RTL into logic cells. Generic cell counts do not estimate silicon area.",
+                            'Sửa thiết kế và testbench, sau đó chạy mô phỏng. Dùng $dumpfile("dump.vcd") và $dumpvars để tạo waveform.',
+                            'Edit the design and testbench, then simulate. Use $dumpfile("dump.vcd") and $dumpvars to capture waveforms.',
+                          )}
+                        </p>
+                        <label className="field-label" htmlFor="example">
+                          {t("Bắt đầu từ mạch mẫu", "Start from an example")}
+                        </label>
+                        <select
+                          id="example"
+                          defaultValue=""
+                          disabled={busy}
+                          onChange={(e) => {
+                            const item = examples.find(
+                              (x) => x.id === e.target.value,
+                            );
+                            if (item) {
+                              setDesign(item.design);
+                              setTb(item.testbench);
+                            }
+                          }}
+                        >
+                          <option value="" disabled>
+                            {t("Chọn mạch mẫu", "Choose an example")}
+                          </option>
+                          {examples.map((e) => (
+                            <option key={e.id} value={e.id}>
+                              {e.title[lang]}
+                            </option>
+                          ))}
+                        </select>
+                        <div className="hint-box">
+                          <h3>{t("Đọc kết quả", "Read the results")}</h3>
+                          <p>
+                            {t(
+                              "Waveform biểu diễn tín hiệu theo thời gian. Synthesis chuyển RTL thành mạng cell logic. Số cell là kết quả tổng hợp tổng quát, chưa phải diện tích silicon.",
+                              "Waveforms show signals over time. Synthesis transforms RTL into logic cells. Generic cell counts do not estimate silicon area.",
+                            )}
+                          </p>
+                        </div>
+                      </>
+                    )}
+                  </section>
+                  <section className="workbench panel">
+                    <div className="editor-toolbar">
+                      <div className="tabs">
+                        <button
+                          className={editorTab === "design" ? "selected" : ""}
+                          onClick={() => setEditorTab("design")}
+                        >
+                          design.sv
+                        </button>
+                        {view !== "exercises" && (
+                          <button
+                            className={editorTab === "tb" ? "selected" : ""}
+                            onClick={() => setEditorTab("tb")}
+                          >
+                            testbench.sv
+                          </button>
+                        )}
+                      </div>
+                      <div className="editor-tools">
+                        <button
+                          className="icon-button"
+                          onClick={share}
+                          aria-label={t("Chia sẻ code", "Share code")}
+                        >
+                          <Share2 size={15} />
+                        </button>
+                        <button
+                          className="icon-button"
+                          disabled={busy}
+                          onClick={() => {
+                            setDesign(
+                              view === "exercises"
+                                ? exercise.starter
+                                : initial.design,
+                            );
+                            setTb(initial.testbench);
+                          }}
+                          aria-label={t("Khôi phục code mẫu", "Reset code")}
+                        >
+                          <RotateCcw size={15} />
+                        </button>
+                      </div>
+                    </div>
+                    <div ref={editorContainer}>
+                      {editorVisible ? (
+                        <Editor
+                          value={editorTab === "design" ? design : tb}
+                          onChange={editorTab === "design" ? setDesign : setTb}
+                          label={
+                            editorTab === "design"
+                              ? "Verilog design editor"
+                              : "Verilog testbench editor"
+                          }
+                          dark={false}
+                        />
+                      ) : (
+                        <div className="editor-loading">
+                          <button
+                            className="secondary-button"
+                            onClick={() => setEditorVisible(true)}
+                          >
+                            {t("Mở trình soạn thảo", "Open code editor")}
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                    {lint.length > 0 && (
+                      <div className="lint-message">{lint.join(" ")}</div>
+                    )}
+                    <div className="run-toolbar">
+                      <span className="language-label">SystemVerilog 2012</span>
+                      <div>
+                        {busy ? (
+                          <button
+                            className="secondary-button"
+                            onClick={() => {
+                              stop();
+                              setStatus(t("Đã dừng", "Stopped"));
+                            }}
+                          >
+                            {t("Dừng", "Stop")}
+                          </button>
+                        ) : (
+                          <>
+                            <button
+                              className="secondary-button"
+                              onClick={() => run("synthesize")}
+                            >
+                              <Layers size={15} />
+                              Synthesize
+                            </button>
+                            <button
+                              className="primary-button"
+                              onClick={() => run("simulate")}
+                            >
+                              <Play size={15} />
+                              Simulate
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                    <div className="result-tabs tabs">
+                      <button
+                        className={resultTab === "wave" ? "selected" : ""}
+                        onClick={() => setResultTab("wave")}
+                      >
+                        Waveform
+                      </button>
+                      <button
+                        className={resultTab === "circuit" ? "selected" : ""}
+                        onClick={() => setResultTab("circuit")}
+                      >
+                        {t("Sơ đồ mạch", "Circuit")}
+                      </button>
+                      <button
+                        className={resultTab === "netlist" ? "selected" : ""}
+                        onClick={() => setResultTab("netlist")}
+                      >
+                        Netlist
+                      </button>
+                      <button
+                        className={resultTab === "log" ? "selected" : ""}
+                        onClick={() => setResultTab("log")}
+                      >
+                        <Terminal size={13} /> Log
+                      </button>
+                    </div>
+                    <div
+                      className="run-status"
+                      role="status"
+                      aria-live="polite"
+                    >
+                      {busy && <span className="spinner" />}
+                      {status}
+                    </div>
+                    {error && (
+                      <div role="alert" className="error-box">
+                        {error}
+                        <p>
+                          {t(
+                            "Kiểm tra tên module, cổng kết nối và cú pháp tại dòng báo lỗi.",
+                            "Check module names, port connections and syntax at the reported line.",
                           )}
                         </p>
                       </div>
-                    </>
-                  )}
-                </section>
-                <section className="workbench panel">
-                  <div className="editor-toolbar">
-                    <div className="tabs">
-                      <button
-                        className={editorTab === "design" ? "selected" : ""}
-                        onClick={() => setEditorTab("design")}
-                      >
-                        design.sv
-                      </button>
-                      {view !== "exercises" && (
-                        <button
-                          className={editorTab === "tb" ? "selected" : ""}
-                          onClick={() => setEditorTab("tb")}
-                        >
-                          testbench.sv
-                        </button>
-                      )}
-                    </div>
-                    <div className="editor-tools">
-                      <button
-                        className="icon-button"
-                        onClick={share}
-                        aria-label={t("Chia sẻ code", "Share code")}
-                      >
-                        <Share2 size={15} />
-                      </button>
-                      <button
-                        className="icon-button"
-                        disabled={busy}
-                        onClick={() => {
-                          setDesign(
-                            view === "exercises"
-                              ? exercise.starter
-                              : initial.design,
-                          );
-                          setTb(initial.testbench);
-                        }}
-                        aria-label={t("Khôi phục code mẫu", "Reset code")}
-                      >
-                        <RotateCcw size={15} />
-                      </button>
-                    </div>
-                  </div>
-                  <div ref={editorContainer}>
-                    {editorVisible ? (
-                      <Editor
-                        value={editorTab === "design" ? design : tb}
-                        onChange={editorTab === "design" ? setDesign : setTb}
-                        label={
-                          editorTab === "design"
-                            ? "Verilog design editor"
-                            : "Verilog testbench editor"
-                        }
-                        dark={dark}
-                      />
-                    ) : (
-                      <div className="editor-loading">
-                        <button
-                          className="secondary-button"
-                          onClick={() => setEditorVisible(true)}
-                        >
-                          {t("Mở trình soạn thảo", "Open code editor")}
-                        </button>
-                      </div>
                     )}
-                  </div>
-                  {lint.length > 0 && (
-                    <div className="lint-message">{lint.join(" ")}</div>
-                  )}
-                  <div className="run-toolbar">
-                    <span className="language-label">SystemVerilog 2012</span>
-                    <div>
-                      {busy ? (
-                        <button
-                          className="secondary-button"
-                          onClick={() => {
-                            stop();
-                            setStatus(t("Đã dừng", "Stopped"));
-                          }}
-                        >
-                          {t("Dừng", "Stop")}
-                        </button>
-                      ) : (
-                        <>
-                          <button
-                            className="secondary-button"
-                            onClick={() => run("synthesize")}
-                          >
-                            <Layers size={15} />
-                            Synthesize
-                          </button>
-                          <button
-                            className="primary-button"
-                            onClick={() => run("simulate")}
-                          >
-                            <Play size={15} />
-                            Simulate
-                          </button>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                  <div className="result-tabs tabs">
-                    <button
-                      className={resultTab === "wave" ? "selected" : ""}
-                      onClick={() => setResultTab("wave")}
-                    >
-                      Waveform
-                    </button>
-                    <button
-                      className={resultTab === "circuit" ? "selected" : ""}
-                      onClick={() => setResultTab("circuit")}
-                    >
-                      {t("Sơ đồ mạch", "Circuit")}
-                    </button>
-                    <button
-                      className={resultTab === "netlist" ? "selected" : ""}
-                      onClick={() => setResultTab("netlist")}
-                    >
-                      Netlist
-                    </button>
-                    <button
-                      className={resultTab === "log" ? "selected" : ""}
-                      onClick={() => setResultTab("log")}
-                    >
-                      <Terminal size={13} /> Log
-                    </button>
-                  </div>
-                  <div className="run-status" role="status" aria-live="polite">
-                    {busy && <span className="spinner" />}
-                    {status}
-                  </div>
-                  {error && (
-                    <div role="alert" className="error-box">
-                      {error}
-                      <p>
-                        {t(
-                          "Kiểm tra tên module, cổng kết nối và cú pháp tại dòng báo lỗi.",
-                          "Check module names, port connections and syntax at the reported line.",
-                        )}
-                      </p>
-                    </div>
-                  )}
-                  <div className="result-body">
-                    {resultTab === "wave" &&
-                      (waveform ? (
-                        <>
-                          <div className="wave-meta">
-                            {waveform.timescale} · {waveform.endTime} ticks{" "}
-                            <button
-                              className="text-button"
-                              onClick={() => {
-                                const link = document.createElement("a");
-                                link.href = URL.createObjectURL(
-                                  new Blob([vcd], { type: "text/plain" }),
-                                );
-                                link.download = "dump.vcd";
-                                link.click();
-                                setTimeout(
-                                  () => URL.revokeObjectURL(link.href),
-                                  1000,
-                                );
-                              }}
-                            >
-                              ↓ VCD
-                            </button>
-                          </div>
-                          <div className="wave-scroll">
-                            <svg
-                              viewBox={`0 0 760 ${waveform.signals.slice(0, 24).length * 38 + 30}`}
-                              role="img"
-                              aria-label="Simulation waveform"
-                            >
-                              <g className="wave-grid">
-                                {[0, 1, 2, 3, 4, 5].map((i) => (
-                                  <g key={i}>
-                                    <line
-                                      x1={170 + i * 112}
-                                      x2={170 + i * 112}
-                                      y1="20"
-                                      y2="100%"
-                                    />
-                                    <text x={170 + i * 112} y="12">
-                                      {Math.round((waveform.endTime * i) / 5)}
-                                    </text>
-                                  </g>
-                                ))}
-                              </g>
-                              {waveform.signals
-                                .slice(0, 24)
-                                .map((signal, index) => (
-                                  <g
-                                    key={signal.name + "-" + index}
-                                    transform={`translate(0,${index * 38 + 30})`}
-                                  >
-                                    <text x="8" y="17" className="signal-name">
-                                      {signal.name.slice(-23)}
-                                    </text>
-                                    {signal.changes
-                                      .slice(0, 2000)
-                                      .map((change, i) => {
-                                        const x =
-                                          170 +
-                                          (change.time /
-                                            Math.max(waveform.endTime, 1)) *
-                                            560;
-                                        const end =
-                                          170 +
-                                          ((signal.changes[i + 1]?.time ??
-                                            waveform.endTime) /
-                                            Math.max(waveform.endTime, 1)) *
-                                            560;
-                                        const y = change.value === "1" ? 3 : 23;
-                                        return signal.width === 1 ? (
-                                          <path
-                                            key={i}
-                                            className={
-                                              /[xz]/i.test(change.value)
-                                                ? "wave-unknown"
-                                                : "wave-line"
-                                            }
-                                            d={`M${x},${i ? (signal.changes[i - 1].value === "1" ? 3 : 23) : y} V${y} H${end}`}
-                                          />
-                                        ) : (
-                                          <g key={i}>
+                    <div className="result-body">
+                      {resultTab === "wave" &&
+                        (waveform ? (
+                          <>
+                            <div className="wave-meta">
+                              {waveform.timescale} · {waveform.endTime} ticks{" "}
+                              <button
+                                className="text-button"
+                                onClick={() => {
+                                  const link = document.createElement("a");
+                                  link.href = URL.createObjectURL(
+                                    new Blob([vcd], { type: "text/plain" }),
+                                  );
+                                  link.download = "dump.vcd";
+                                  link.click();
+                                  setTimeout(
+                                    () => URL.revokeObjectURL(link.href),
+                                    1000,
+                                  );
+                                }}
+                              >
+                                ↓ VCD
+                              </button>
+                            </div>
+                            <div className="wave-scroll">
+                              <svg
+                                viewBox={`0 0 760 ${waveform.signals.slice(0, 24).length * 38 + 30}`}
+                                role="img"
+                                aria-label="Simulation waveform"
+                              >
+                                <g className="wave-grid">
+                                  {[0, 1, 2, 3, 4, 5].map((i) => (
+                                    <g key={i}>
+                                      <line
+                                        x1={170 + i * 112}
+                                        x2={170 + i * 112}
+                                        y1="20"
+                                        y2="100%"
+                                      />
+                                      <text x={170 + i * 112} y="12">
+                                        {Math.round((waveform.endTime * i) / 5)}
+                                      </text>
+                                    </g>
+                                  ))}
+                                </g>
+                                {waveform.signals
+                                  .slice(0, 24)
+                                  .map((signal, index) => (
+                                    <g
+                                      key={signal.name + "-" + index}
+                                      transform={`translate(0,${index * 38 + 30})`}
+                                    >
+                                      <text
+                                        x="8"
+                                        y="17"
+                                        className="signal-name"
+                                      >
+                                        {signal.name.slice(-23)}
+                                      </text>
+                                      {signal.changes
+                                        .slice(0, 2000)
+                                        .map((change, i) => {
+                                          const x =
+                                            170 +
+                                            (change.time /
+                                              Math.max(waveform.endTime, 1)) *
+                                              560;
+                                          const end =
+                                            170 +
+                                            ((signal.changes[i + 1]?.time ??
+                                              waveform.endTime) /
+                                              Math.max(waveform.endTime, 1)) *
+                                              560;
+                                          const y =
+                                            change.value === "1" ? 3 : 23;
+                                          return signal.width === 1 ? (
                                             <path
-                                              className="wave-line"
-                                              d={`M${x},13 l4,-10 H${Math.max(x + 4, end - 4)} l4,10 l-4,10 H${x + 4} Z`}
+                                              key={i}
+                                              className={
+                                                /[xz]/i.test(change.value)
+                                                  ? "wave-unknown"
+                                                  : "wave-line"
+                                              }
+                                              d={`M${x},${i ? (signal.changes[i - 1].value === "1" ? 3 : 23) : y} V${y} H${end}`}
                                             />
-                                            {end - x > 24 && (
-                                              <text
-                                                x={x + 7}
-                                                y="17"
-                                                className="bus-value"
-                                              >
-                                                {/[xz]/i.test(change.value)
-                                                  ? change.value
-                                                  : parseInt(
-                                                      change.value,
-                                                      2,
-                                                    ).toString(16)}
-                                              </text>
-                                            )}
-                                          </g>
-                                        );
-                                      })}
-                                  </g>
-                                ))}
-                            </svg>
-                          </div>
-                        </>
-                      ) : (
-                        <div className="empty-state">
-                          <span className="wave-icon">▁▁▔▔▁▁▔▔▁▁</span>
-                          <h3>
-                            {t(
-                              "Mạch của bạn sẽ hoạt động thế nào?",
-                              "How will your circuit behave?",
-                            )}
-                          </h3>
-                          <p>
-                            {t(
-                              "Bấm Simulate để quan sát từng tín hiệu.",
-                              "Press Simulate to inspect each signal.",
-                            )}
-                          </p>
-                        </div>
-                      ))}
-                    {resultTab === "circuit" &&
-                      (netlist ? (
-                        <>
-                          <div className="cell-stats">
-                            <strong>{cells.length} cells</strong>
-                            {Object.entries(cellCounts).map(([name, count]) => (
-                              <span key={name}>
-                                {name} × {count}
-                              </span>
-                            ))}
-                          </div>
-                          {svg ? (
-                            <iframe
-                              className="schematic"
-                              title={t(
-                                "Sơ đồ mạch tổng hợp",
-                                "Synthesized circuit schematic",
+                                          ) : (
+                                            <g key={i}>
+                                              <path
+                                                className="wave-line"
+                                                d={`M${x},13 l4,-10 H${Math.max(x + 4, end - 4)} l4,10 l-4,10 H${x + 4} Z`}
+                                              />
+                                              {end - x > 24 && (
+                                                <text
+                                                  x={x + 7}
+                                                  y="17"
+                                                  className="bus-value"
+                                                >
+                                                  {/[xz]/i.test(change.value)
+                                                    ? change.value
+                                                    : parseInt(
+                                                        change.value,
+                                                        2,
+                                                      ).toString(16)}
+                                                </text>
+                                              )}
+                                            </g>
+                                          );
+                                        })}
+                                    </g>
+                                  ))}
+                              </svg>
+                            </div>
+                          </>
+                        ) : (
+                          <div className="empty-state">
+                            <span className="wave-icon">▁▁▔▔▁▁▔▔▁▁</span>
+                            <h3>
+                              {t(
+                                "Mạch của bạn sẽ hoạt động thế nào?",
+                                "How will your circuit behave?",
                               )}
-                              sandbox=""
-                              srcDoc={`<!doctype html><html><body style="margin:0;padding:16px;background:white">${svg}</body></html>`}
-                            />
-                          ) : (
-                            <p>{t("Đang vẽ sơ đồ…", "Drawing circuit…")}</p>
-                          )}
-                        </>
-                      ) : (
-                        <div className="empty-state">
-                          <Layers />
-                          <p>
-                            {t(
-                              "Bấm Synthesize để xem sơ đồ và thống kê cell.",
-                              "Press Synthesize to view the circuit and cell statistics.",
+                            </h3>
+                            <p>
+                              {t(
+                                "Bấm Simulate để quan sát từng tín hiệu.",
+                                "Press Simulate to inspect each signal.",
+                              )}
+                            </p>
+                          </div>
+                        ))}
+                      {resultTab === "circuit" &&
+                        (netlist ? (
+                          <>
+                            <div className="cell-stats">
+                              <strong>{cells.length} cells</strong>
+                              {Object.entries(cellCounts).map(
+                                ([name, count]) => (
+                                  <span key={name}>
+                                    {name} × {count}
+                                  </span>
+                                ),
+                              )}
+                            </div>
+                            {svg ? (
+                              <iframe
+                                className="schematic"
+                                title={t(
+                                  "Sơ đồ mạch tổng hợp",
+                                  "Synthesized circuit schematic",
+                                )}
+                                sandbox=""
+                                srcDoc={`<!doctype html><html><body style="margin:0;padding:16px;background:white">${svg}</body></html>`}
+                              />
+                            ) : (
+                              <p>{t("Đang vẽ sơ đồ…", "Drawing circuit…")}</p>
                             )}
-                          </p>
-                        </div>
-                      ))}
-                    {resultTab === "netlist" && (
-                      <pre>
-                        {netlist
-                          ? JSON.stringify(netlist, null, 2)
-                          : t("Chưa có netlist.", "No netlist yet.")}
-                      </pre>
-                    )}
-                    {resultTab === "log" && (
-                      <pre>
-                        {log ||
-                          t(
-                            "Log công cụ sẽ xuất hiện ở đây.",
-                            "Engine logs will appear here.",
-                          )}
-                      </pre>
-                    )}
-                  </div>
-                </section>
-              </div>
+                          </>
+                        ) : (
+                          <div className="empty-state">
+                            <Layers />
+                            <p>
+                              {t(
+                                "Bấm Synthesize để xem sơ đồ và thống kê cell.",
+                                "Press Synthesize to view the circuit and cell statistics.",
+                              )}
+                            </p>
+                          </div>
+                        ))}
+                      {resultTab === "netlist" && (
+                        <pre>
+                          {netlist
+                            ? JSON.stringify(netlist, null, 2)
+                            : t("Chưa có netlist.", "No netlist yet.")}
+                        </pre>
+                      )}
+                      {resultTab === "log" && (
+                        <pre>
+                          {log ||
+                            t(
+                              "Log công cụ sẽ xuất hiện ở đây.",
+                              "Engine logs will appear here.",
+                            )}
+                        </pre>
+                      )}
+                    </div>
+                  </section>
+                </div>
+              </section>
             </>
           )}
           {view === "examples" && (
