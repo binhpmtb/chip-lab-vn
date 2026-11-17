@@ -117,6 +117,8 @@ const resources = [
 ];
 export default function Lab() {
   const [lang, setLang] = useState<Lang>("vi");
+  const [editorVisible, setEditorVisible] = useState(false);
+  const editorContainer = useRef<HTMLDivElement>(null);
   const [dark, setDark] = useState(true);
   const [view, setView] = useState("learn");
   const [lessonIndex, setLessonIndex] = useState(0);
@@ -140,6 +142,17 @@ export default function Lab() {
   const lesson = curriculum.lessons[lessonIndex];
   const exercise = exercises.find((e) => e.id === exerciseId)!;
   const t = (vi: string, en: string) => (lang === "vi" ? vi : en);
+  useEffect(() => {
+    if (editorVisible || !editorContainer.current) return;
+    const observer = new IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) {
+        setEditorVisible(true);
+        observer.disconnect();
+      }
+    });
+    observer.observe(editorContainer.current);
+    return () => observer.disconnect();
+  }, [view, editorVisible]);
   useEffect(() => {
     try {
       setProgress(readProgress(localStorage.getItem("chiplab-progress")));
@@ -726,16 +739,29 @@ export default function Lab() {
                       </button>
                     </div>
                   </div>
-                  <Editor
-                    value={editorTab === "design" ? design : tb}
-                    onChange={editorTab === "design" ? setDesign : setTb}
-                    label={
-                      editorTab === "design"
-                        ? "Verilog design editor"
-                        : "Verilog testbench editor"
-                    }
-                    dark={dark}
-                  />
+                  <div ref={editorContainer}>
+                    {editorVisible ? (
+                      <Editor
+                        value={editorTab === "design" ? design : tb}
+                        onChange={editorTab === "design" ? setDesign : setTb}
+                        label={
+                          editorTab === "design"
+                            ? "Verilog design editor"
+                            : "Verilog testbench editor"
+                        }
+                        dark={dark}
+                      />
+                    ) : (
+                      <div className="editor-loading">
+                        <button
+                          className="secondary-button"
+                          onClick={() => setEditorVisible(true)}
+                        >
+                          {t("Mở trình soạn thảo", "Open code editor")}
+                        </button>
+                      </div>
+                    )}
+                  </div>
                   {lint.length > 0 && (
                     <div className="lint-message">{lint.join(" ")}</div>
                   )}
