@@ -1797,3 +1797,44 @@ footer {
     font-size: 2.2rem;
   }
 }
+/* Beginner learning experience */
+:root { --space: 8px; --radius: 4px; }
+.hero-actions { display:flex; gap:12px; flex-wrap:wrap; margin:24px 0; }
+.mini-preview { border:1px solid var(--border); padding:16px; margin:20px 0; display:grid; grid-template-columns:40px 1fr; gap:8px; font-family:monospace; }
+.mini-preview svg { width:100%; height:40px; }
+.mini-preview path { fill:none; stroke:var(--green); stroke-width:2; stroke-dasharray:500; animation:trace 4s linear infinite; }
+.mini-preview small { grid-column:1/-1; color:var(--muted); }
+@keyframes trace { from {stroke-dashoffset:500} to {stroke-dashoffset:0} }
+.hero-meta { gap:8px; flex-wrap:wrap; }
+.hero-meta span { border:1px solid var(--border); padding:8px; }
+.module-accordion { border-top:2px solid var(--text); padding:16px 0; }
+.module-accordion summary { cursor:pointer; display:grid; grid-template-columns:50px 1fr; gap:8px; min-height:44px; }
+.module-accordion summary > span:last-child { grid-column:2; color:var(--muted); font-size:12px; }
+.module-accordion > button { margin-top:8px; }
+.lesson-link { display:flex; gap:12px; width:100%; background:var(--panel); border:0; border-bottom:1px solid var(--border); text-align:left; padding:12px; }
+.lab-section { display:block; }
+.lab-section > .editorial-label { margin-bottom:24px; }
+.lab-grid { grid-template-columns:minmax(0,1fr) minmax(0,1.2fr); }
+.lesson-panel { max-height:none; }
+.workbench { position:sticky; top:16px; min-width:0; }
+.lesson-content h2,.lesson-content h3 { border-top:1px solid var(--border); padding-top:20px; }
+.lesson-content blockquote { margin:16px 0; padding:12px; border-left:3px solid var(--green); background:var(--panel2); }
+.lesson-content td { border:1px solid var(--border); padding:5px; font-family:monospace; }
+.lesson-navigation { position:sticky; bottom:0; background:var(--panel); display:flex; flex-wrap:wrap; gap:8px; padding:12px 0; border-top:2px solid var(--text); }
+.lesson-navigation progress { flex-basis:100%; }
+.lesson-navigation button,.mobile-lesson-tabs button { min-height:44px; background:var(--panel); border:1px solid var(--border); padding:8px 12px; }
+.mobile-lesson-tabs { display:none; }
+button,select,summary,a.icon-button { min-height:44px; }
+.loading-skeleton { width:100%; height:16px; background:var(--border); animation:pulse 1s alternate infinite; }
+@keyframes pulse { to {opacity:.4} }
+.run-toolbar > div { flex-wrap:wrap; }
+.run-toolbar .primary-button { order:-1; }
+:root[data-theme="dark"] { --bg:#131519; --panel:#191c22; --panel2:#242832; --border:#515762; --text:#f4f4f5; --muted:#bbc0ca; --green:#ff9bad; color-scheme:dark; }
+body,.app-shell,.sidebar,.topbar,.panel,.lesson-panel,.workbench,.resource-card,.credits,.result-body,.module-card,.module-card.selected,.module-card:hover,.nav-item.active { background:var(--bg); }
+.editor-toolbar,.run-toolbar,select,.hint-box,.lesson-content pre { background:var(--panel2); }
+.tabs button.selected,.secondary-button,.cell-stats span { background:var(--panel); color:var(--text); }
+.editorial-section,.panel,.module-card,footer,.page-title,.resource-card { border-top-color:var(--text); }
+.hero-copy,.lab-grid > *,main,.workspace { min-width:0; }
+@media(max-width:800px) { .lab-grid {grid-template-columns:1fr;} .mobile-lesson-tabs {display:flex;gap:8px;margin-bottom:16px;} .mobile-lesson-tabs [aria-pressed="true"] {border-color:var(--green);color:var(--green);} .show-lesson .workbench,.show-practice .lesson-panel {display:none;} .workbench{position:static;} .hero-meta{grid-template-columns:1fr;} .editorial-label{display:flex;} .lesson-content{overflow-wrap:anywhere;} .tabs{flex-wrap:wrap;} }
+@media(prefers-reduced-motion:reduce) { .mini-preview path,.loading-skeleton{animation:none;} }
+.compile-error-line { border-left:3px solid var(--green); background:var(--green-dark); }

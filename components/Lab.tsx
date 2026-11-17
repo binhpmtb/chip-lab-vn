@@ -114,6 +114,10 @@ const resources = [
   ],
 ];
 export default function Lab() {
+  const [dark, setDark] = useState(false);
+  const [done, setDone] = useState<number[]>([]);
+  const [mobilePractice, setMobilePractice] = useState(false);
+  const openLesson = (index: number) => { setLessonIndex(index); setView("learn"); setMobilePractice(false); setTimeout(() => document.querySelector(".lab-section")?.scrollIntoView({ behavior: "auto" }), 0); };
   const [lang, setLang] = useState<Lang>("vi");
   const [editorVisible, setEditorVisible] = useState(false);
   const editorContainer = useRef<HTMLDivElement>(null);
@@ -152,6 +156,9 @@ export default function Lab() {
   }, [view, editorVisible]);
   useEffect(() => {
     try {
+      setDark(localStorage.getItem("chiplab-theme") === "dark");
+      const savedLessons = JSON.parse(localStorage.getItem("chiplab-lessons") || "[]");
+      if (Array.isArray(savedLessons)) setDone(savedLessons.filter((x) => Number.isInteger(x) && x >= 0 && x < curriculum.lessons.length));
       setProgress(readProgress(localStorage.getItem("chiplab-progress")));
       const saved = localStorage.getItem("chiplab-design");
       if (saved !== null) setDesign(saved);
@@ -175,8 +182,9 @@ export default function Lab() {
   }, []);
   useEffect(() => {
     document.documentElement.lang = lang;
-    document.documentElement.dataset.theme = "light";
-  }, [lang, hydrated]);
+    document.documentElement.dataset.theme = dark ? "dark" : "light";
+    if(hydrated) { try { localStorage.setItem("chiplab-theme", dark ? "dark" : "light"); localStorage.setItem("chiplab-lessons", JSON.stringify(done)); } catch {} }
+  }, [lang, hydrated, dark, done]);
   useEffect(() => {
     if (hydrated) {
       try {
@@ -338,6 +346,11 @@ export default function Lab() {
       );
     }
   }
+  useEffect(() => {
+    const shortcut = (event: KeyboardEvent) => { if ((event.ctrlKey || event.metaKey) && event.key === "Enter" && ["learn", "lab", "exercises"].includes(view)) { event.preventDefault(); run("simulate"); } };
+    window.addEventListener("keydown", shortcut);
+    return () => window.removeEventListener("keydown", shortcut);
+  });
   const lint = basicLint(design);
   const waveform = vcd ? parseVcd(vcd) : null;
   const cells = Object.values(netlist?.modules || {}).flatMap((m) =>
@@ -384,7 +397,7 @@ export default function Lab() {
         </nav>
         <div className="sidebar-bottom">
           <div className="progress-heading">
-            <span>{t("Tiến độ của bạn", "Your progress")}</span>
+            <span>{t("Bài thực hành đã đạt", "Exercises passed")}</span>
             <strong>
               {progress.length}/{exercises.length}
             </strong>
@@ -400,10 +413,7 @@ export default function Lab() {
               "One small circuit. One step forward.",
             )}
           </p>
-          <button className="text-button" onClick={() => setView("credits")}>
-            {t("Nguồn & giấy phép", "Credits & licenses")}{" "}
-            <ArrowUpRight size={14} />
-          </button>
+
         </div>
       </aside>
       <div className="workspace">
@@ -415,7 +425,7 @@ export default function Lab() {
                 t("Nguồn & giấy phép", "Credits & licenses")}
             </span>
           </div>
-          <div className="top-actions">
+          <div className="top-actions"><button className="icon-button" onClick={() => setDark(!dark)} aria-label={t("Đổi giao diện sáng tối", "Toggle theme")}>{dark ? "☀" : "☾"}</button>
             <span className="local-badge">
               <span />
               {t("Chạy trên trình duyệt", "Runs in your browser")}
@@ -449,6 +459,8 @@ export default function Lab() {
                       {t("Thiết kế cả tương lai.", "Design what comes next.")}
                     </span>
                   </h1>
+                  <div className="hero-actions"><button className="primary-button" onClick={() => openLesson(0)}>{t("Bắt đầu bài 1", "Start lesson 1")}</button><button className="secondary-button" onClick={() => setView("lab")}>{t("Mở Playground", "Open Playground")}</button></div>
+                  <div className="mini-preview" aria-label={t("Minh họa tín hiệu clock", "Clock signal illustration")}><span>CLK</span><svg viewBox="0 0 300 40" aria-hidden="true"><path d="M0 30H30V10H60V30H90V10H120V30H150V10H180V30H210V10H240V30H270V10H300" /></svg><small>{t("Minh họa waveform — tín hiệu theo thời gian", "Waveform illustration — signals over time")}</small></div>
                   <div className="hero-details">
                     <p>
                       {t(
@@ -480,35 +492,15 @@ export default function Lab() {
                   </span>
                 </div>
                 <div className="module-row">
-                  {curriculum.modules.map((m, i) => (
-                    <button
-                      key={m.id}
-                      className={
-                        lesson.module === m.id
-                          ? "module-card selected"
-                          : "module-card"
-                      }
-                      onClick={() => {
-                        const index = curriculum.lessons.findIndex(
-                          (l) => l.module === m.id,
-                        );
-                        if (index >= 0) setLessonIndex(index);
-                      }}
-                    >
-                      <span className="module-number">
-                        {String(i + 1).padStart(2, "0")} /
-                      </span>
-                      <strong>{m.title[lang]}</strong>
-                      <span>
-                        {
-                          curriculum.lessons.filter((l) => l.module === m.id)
-                            .length
-                        }{" "}
-                        {t("bài học", "lessons")}
-                      </span>
-                    </button>
-                  ))}
-                </div>
+{curriculum.modules.map((m, i) => {
+const items = curriculum.lessons.map((l, index) => ({...l,index})).filter(l => l.module === m.id);
+const count = items.filter(l => done.includes(l.index)).length;
+return <details className="module-accordion" key={m.id} open={lesson.module === m.id || undefined}>
+<summary><span className="module-number">{String(i+1).padStart(2,"0")} /</span><strong>{m.title[lang]}</strong><span>{count === items.length ? t("Hoàn thành", "Complete") : count ? t("Đang học", "In progress") : t("Chưa bắt đầu", "Not started")} · {items.length * 10} {t("phút ước tính", "min estimated")}</span></summary>
+<button className="secondary-button" onClick={() => openLesson(items.find(l => !done.includes(l.index))?.index ?? items[0].index)}>{t("Tiếp tục học", "Continue learning")}</button>
+{items.map(l => <button className="lesson-link" key={l.index} onClick={() => openLesson(l.index)}><span>{done.includes(l.index) ? "✓" : "○"}</span>{l.title[lang]}</button>)}
+</details>;
+})}               </div>
               </section>
             </>
           )}
@@ -530,7 +522,7 @@ export default function Lab() {
                     <span className="status-dot" /> Icarus Verilog · Yosys WASM
                   </span>
                 </div>
-                <div className="lab-grid">
+                <div className="mobile-lesson-tabs" role="group" aria-label={t("Chế độ học", "Learning mode")}><button aria-pressed={!mobilePractice} onClick={() => setMobilePractice(false)}>{t("Bài học", "Lesson")}</button><button aria-pressed={mobilePractice} onClick={() => setMobilePractice(true)}>{t("Thực hành", "Practice")}</button></div><div className={"lab-grid " + (mobilePractice || view === "lab" ? "show-practice" : "show-lesson")}>
                   <section className="lesson-panel panel">
                     {view === "exercises" ? (
                       <>
@@ -604,6 +596,8 @@ export default function Lab() {
                         <article className="lesson-content">
                           <h2>{lesson.title[lang]}</h2>
                           <Markdown>{lesson.body[lang]}</Markdown>
+{lessonIndex === 0 && <table><caption>{t("Trọng số bit (8 bit)", "Bit weights (8 bits)")}</caption><tbody><tr>{[128,64,32,16,8,4,2,1].map(n => <td key={n}>{n}</td>)}</tr></tbody></table>}
+<div className="lesson-navigation"><progress aria-label={t("Tiến độ module", "Module progress")} max={curriculum.lessons.filter(l => l.module === lesson.module).length} value={done.filter(i => curriculum.lessons[i]?.module === lesson.module).length}/><button disabled={lessonIndex === 0} onClick={() => openLesson(lessonIndex-1)}>{t("Trước", "Previous")}</button><button onClick={() => setDone(old => Array.from(new Set([...old,lessonIndex])))}>{done.includes(lessonIndex) ? "✓ " : ""}{t("Đã học xong", "Mark complete")}</button><button disabled={lessonIndex === curriculum.lessons.length-1} onClick={() => openLesson(lessonIndex+1)}>{t("Sau", "Next")}</button></div>
                         </article>
                         <button
                           className="secondary-button full"
@@ -743,7 +737,8 @@ export default function Lab() {
                               ? "Verilog design editor"
                               : "Verilog testbench editor"
                           }
-                          dark={false}
+                          dark={dark}
+                          errorLine={Number(error.match(/(?:\.sv|\.v):(\d+)/)?.[1]) || undefined}
                         />
                       ) : (
                         <div className="editor-loading">
@@ -776,17 +771,17 @@ export default function Lab() {
                           <>
                             <button
                               className="secondary-button"
-                              onClick={() => run("synthesize")}
+                              title={t("Tổng hợp RTL thành các cell logic", "Synthesize RTL into logic cells")} onClick={() => run("synthesize")}
                             >
                               <Layers size={15} />
-                              Synthesize
+                              {t("Tổng hợp · Synthesize", "Synthesize")}
                             </button>
                             <button
                               className="primary-button"
-                              onClick={() => run("simulate")}
+                              title={t("Chạy testbench và xem tín hiệu — Ctrl+Enter", "Run testbench and inspect signals — Ctrl+Enter")} onClick={() => run("simulate")}
                             >
                               <Play size={15} />
-                              Simulate
+                              {t("Mô phỏng · Simulate", "Simulate")}
                             </button>
                           </>
                         )}
@@ -794,25 +789,25 @@ export default function Lab() {
                     </div>
                     <div className="result-tabs tabs">
                       <button
-                        className={resultTab === "wave" ? "selected" : ""}
+                        title={t("Waveform: tín hiệu thay đổi theo thời gian", "Waveform: signals over time")} className={resultTab === "wave" ? "selected" : ""}
                         onClick={() => setResultTab("wave")}
                       >
                         Waveform
                       </button>
                       <button
-                        className={resultTab === "circuit" ? "selected" : ""}
+                        title={t("Sơ đồ các cell sau tổng hợp RTL", "Logic cells after RTL synthesis")} className={resultTab === "circuit" ? "selected" : ""}
                         onClick={() => setResultTab("circuit")}
                       >
                         {t("Sơ đồ mạch", "Circuit")}
                       </button>
                       <button
-                        className={resultTab === "netlist" ? "selected" : ""}
+                        title={t("Netlist: danh sách cell và kết nối", "Netlist: cells and connections")} className={resultTab === "netlist" ? "selected" : ""}
                         onClick={() => setResultTab("netlist")}
                       >
                         Netlist
                       </button>
                       <button
-                        className={resultTab === "log" ? "selected" : ""}
+                        title={t("Log: thông báo chi tiết của công cụ", "Log: detailed engine messages")} className={resultTab === "log" ? "selected" : ""}
                         onClick={() => setResultTab("log")}
                       >
                         <Terminal size={13} /> Log
@@ -823,11 +818,11 @@ export default function Lab() {
                       role="status"
                       aria-live="polite"
                     >
-                      {busy && <span className="spinner" />}
+                      {busy && <span className="loading-skeleton" aria-hidden="true" />}
                       {status}
                     </div>
                     {error && (
-                      <div role="alert" className="error-box">
+                      <div role="alert" className="error-box"><strong>{t("Chưa chạy được thiết kế", "Unable to run design")}</strong><p>{t("Kiểm tra dòng được báo lỗi, dấu chấm phẩy và cặp begin/end. Sửa lỗi đầu tiên rồi chạy lại.", "Check the reported line, semicolons and begin/end pairs. Fix the first error and run again.")}</p>
                         {error}
                         <p>
                           {t(
@@ -961,8 +956,8 @@ export default function Lab() {
                             </h3>
                             <p>
                               {t(
-                                "Bấm Simulate để quan sát từng tín hiệu.",
-                                "Press Simulate to inspect each signal.",
+                                "1. Chọn mạch mẫu → 2. Viết hoặc sửa code → 3. Bấm Mô phỏng (Ctrl+Enter).",
+                                "1. Choose an example → 2. Edit code → 3. Simulate (Ctrl+Enter).",
                               )}
                             </p>
                           </div>
