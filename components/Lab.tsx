@@ -404,14 +404,14 @@ export default function Lab() {
   return (
     <div className="app-shell">
       <aside className="sidebar">
-        <Link className="brand" href="/" aria-label="ChipLab home">
+        <Link className="brand" href="/" aria-label={t("Trang chủ", "Home") + " B CH\\P"}>
           <img
             src="/fet-logo.png"
             alt="FET, Khoa Kỹ thuật và Công nghệ, Đại học Sài Gòn"
             width="80"
             height="80"
           />
-          <span className="brand-wordmark">ChipLab</span>
+          <img className="brand-wordmark" src="/bchip-brand.svg" alt={"B CH\\P"} width="76" height="93" />
         </Link>
         <p className="sidebar-caption">
           KHOA KỸ THUẬT VÀ CÔNG NGHỆ
@@ -457,7 +457,7 @@ export default function Lab() {
       <div className="workspace">
         <header className="topbar">
           <div className="breadcrumb">
-            ChipLab <ChevronRight size={14} />{" "}
+            B CH\P <ChevronRight size={14} />{" "}
             <span>
               {nav.find((n) => n[0] === view)?.[2] ||
                 t("Nguồn & giấy phép", "Credits & licenses")}
@@ -1285,7 +1285,7 @@ export default function Lab() {
                       </a>
                     ) : (
                       <small>
-                        {t("Ví dụ gốc ChipLab", "Original ChipLab example")}
+                        {t("Ví dụ gốc B CH\\P", "Original B CH\\P example")}
                       </small>
                     )}
                     <button
@@ -1342,8 +1342,8 @@ export default function Lab() {
               <h1>{t("Nguồn & giấy phép", "Credits & licenses")}</h1>
               <p>
                 {t(
-                  "ChipLab được phát hành theo GPL-2.0-or-later. Nội dung bài học và bài tập được biên soạn riêng cho ứng dụng.",
-                  "ChipLab is distributed under GPL-2.0-or-later. Lessons and exercises are originally authored for this application.",
+                  "B CH\\P được phát hành theo GPL-2.0-or-later. Nội dung bài học và bài tập được biên soạn riêng cho ứng dụng.",
+                  "B CH\\P is distributed under GPL-2.0-or-later. Lessons and exercises are originally authored for this application.",
                 )}
               </p>
               <ul>
@@ -1388,7 +1388,7 @@ export default function Lab() {
               alt="Logo FET, Đại học Sài Gòn"
             />
             <div className="footer-institution">
-              ChipLab
+              B CH\P
               <br />
               Khoa Kỹ thuật và Công nghệ
               <br />
@@ -1415,3 +1415,4 @@ export default function Lab() {
     </div>
   );
 }
+

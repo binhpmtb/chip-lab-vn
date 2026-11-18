@@ -874,3 +874,4 @@ footer > span {
 .lesson-navigation{position:static;}
 .secondary-button{color:var(--navy);background:var(--white);}
 @media(max-width:639px){.sidebar{grid-template-columns:1fr;}.sidebar-caption{grid-column:1;}.timing-figure text{font-size:24px;}.timing-figure svg{min-height:150px;}}
+.brand img.brand-wordmark { width: 76px; height: 93px; object-fit: contain; }
